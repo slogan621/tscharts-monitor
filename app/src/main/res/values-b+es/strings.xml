@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">Thousand Smiles Clinic Monitor</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Nombre de usario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Registrarse</string>
+    <string name="action_sign_in_short">Registrarse</string>
+    <string name="error_invalid_email">
+Esta dirección de correo electrónico no es válida.</string>
+    <string name="error_clinic_not_found_date">Ninguna clínica activa se puede encontrar en esta fecha</string>
+    <string name="error_invalid_password">
+Esta contraseña es demasiado corta.</string>
+    <string name="error_invalid_username_or_password">Invalid name or password</string>
+    <string name="error_incorrect_password">T
+Esta contraseña es incorrecta</string>
+    <string name="error_field_required">
+Este campo es requerido</string>
+    <string name="error_internal_bad_request">
+Solicitud incorrecta. Informe este problema</string>
+    <string name="error_internal_error">
+Error interno. Informe este problema</string>
+    <string name="error_unknown">
+Error desconocido. Informe este problema</string>
+    <string name="error_unable_to_connect">No puede conectarse. Asegúrese de que la conexión inalámbrica está activada, de que la dirección IP y la configuración del puerto son correctas y que hay conectividad a Internet..</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."
+    </string>
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="title_station_status">Estado de la Estación</string>
+
+    <string formatted="false" name="format_status_banner">Esperar medio: %s Min de Esperar: %s Max de Esperar: %s Linea Media: %d Linea Min: %d Linea Max: %d Número de pacientes en espera: %d</string>
+    <string formatted="false" name="format_status_banner_es">Esperar medio: %s Min de Esperar: %s Max de Esperar: %s Linea Media: %d Linea Min: %d Linea Max: %d Número de pacientes en espera: %d</string>
+
+    <string name="dob">DOB</string>
+    <string name="dob_es">Fecha de nacimiento</string>
+
+    <string name="estimated_waiting_time">Estimated Wait</string>
+    <string name="estimated_waiting_time_es">Espera Estimada</string>
+
+    <string name="male">Male</string>
+    <string name="male_es">Masculino</string>
+
+    <string name="female">Female</string>
+    <string name="female_es">Hembra</string>
+
+    <string name="away">Away</string>
+    <string name="away_es">Fuera</string>
+
+    <string name="active">Active</string>
+    <string name="active_es">Activo</string>
+
+    <string name="waiting">Will Return</string>
+    <string name="waiting_es">Esperando</string>
+
+    <string name="state">State</string>
+    <string name="state_es">Estado</string>
+
+    <string name="willreturn">Waiting</string>
+    <string name="willreturn_es">Regresará</string>
+
+    <string name="avgservicetime">Avg Service Time</string>
+    <string name="avgservicetime_es">Tiempo Romedio de Servicio</string>
+
+    <string name="clinicstationstatus">Clinic Station Status</string>
+    <string name="clinicstationstatus_es">Estado de la Clínica</string>
+
+</resources>

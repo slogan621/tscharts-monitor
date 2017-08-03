@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Thousand Smiles Clinic Monitor</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_clinic_not_found_date">No active clinic can be found on this date</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_username_or_password">Invalid name or password</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_internal_bad_request">Bad Request. Please report this problem</string>
+    <string name="error_internal_error">Internal Error. Please report this problem</string>
+    <string name="error_unknown">Unknown Error. Please report this problem</string>
+    <string name="error_unable_to_connect">Unable to connect. Make sure wireless is enabled, that the IP address and port settings are correct, and internet connectivity is present.</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_station_status">Station Status</string>
+
+    <string formatted="false" name="format_status_banner">Avg Wait: %s Min Wait: %s Max Wait: %s Avg Line: %d Min Line: %d Max Line: %d Patients Waiting: %d</string>
+    <string formatted="false" name="format_status_banner_es">Esperar medio: %s Min de Esperar: %s Max de Esperar: %s Linea Media: %d Linea Min: %d Linea Max: %d Número de pacientes en espera: %d</string>
+
+    <string name="dob">DOB</string>
+    <string name="dob_es">Fecha de nacimiento</string>
+
+    <string name="estimated_waiting_time">Estimated Wait</string>
+    <string name="estimated_waiting_time_es">Espera Estimada</string>
+
+    <string name="male">Male</string>
+    <string name="male_es">Masculino</string>
+
+    <string name="female">Female</string>
+    <string name="female_es">Hembra</string>
+
+    <string name="away">Away</string>
+    <string name="away_es">Fuera</string>
+
+    <string name="active">Active</string>
+    <string name="active_es">Activo</string>
+
+    <string name="waiting">Waiting</string>
+    <string name="waiting_es">Esperando</string>
+
+    <string name="state">State</string>
+    <string name="state_es">Estado</string>
+
+    <string name="willreturn">Will Return</string>
+    <string name="willreturn_es">Regresará</string>
+
+    <string name="avgservicetime">Avg Service Time</string>
+    <string name="avgservicetime_es">Tiempo Romedio de Servicio</string>
+
+    <string name="clinicstationstatus">Clinic Station Status</string>
+    <string name="clinicstationstatus_es">Estado de la Clínica</string>
+
+    </resources>
