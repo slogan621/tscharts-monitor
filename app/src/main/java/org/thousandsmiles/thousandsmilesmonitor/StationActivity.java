@@ -54,7 +54,6 @@ public class StationActivity extends Activity {
                 public void run() {
                     TextView text = (TextView) findViewById(R.id.clinicdatetime);
                     text.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date()));
-
                     text = (TextView) findViewById(R.id.clinicstatus);
                     String status = m_sess.getOverallStatus();
                     text.setText(status);
@@ -238,6 +237,11 @@ public class StationActivity extends Activity {
             int count = 0;
             int status = -1;
             int numPages = 0;
+
+            try {
+                Thread.sleep(5000);
+            } catch(InterruptedException e) {
+            }
 
             while (true) {
                 if (count == 0) {
