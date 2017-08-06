@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -112,11 +113,11 @@ public class StationActivity extends Activity {
                         text.setText(label);
                         QueueHeader.State state = headers.get(h).getState();
                         if (state == QueueHeader.State.WAITING) {
-                            text.setTextColor(green);
+                            text.setTextColor(yellow);
                         } else if (state == QueueHeader.State.AWAY) {
                             text.setTextColor(skyBlue);
                         } else {
-                            text.setTextColor(yellow);
+                            text.setTextColor(green);
                         }
                     }
                  }
@@ -151,10 +152,17 @@ public class StationActivity extends Activity {
                     text.setText(labels.get(4));
 
                     int numRows = m_sess.getNumberOfRows();
-                    for (int i = 0; i < numRows; i++) {
-                        ArrayList<String> rowdata = m_sess.getRow(offset, i);
+                    for (int i = -1; i < numRows; i++) {
+                        ArrayList<String> rowdata;
+                        if (i == -1) {
+                            rowdata = m_sess.getActiveRow(offset);
+                            //rowdata = m_sess.getRow(offset, 0);
+                        } else {
+                            rowdata = m_sess.getRow(offset, i);
+                        }
 
                         TableRow tr = new TableRow(m_context);
+
                         for (int j = 0; j < rowdata.size(); j++) {
 
                             tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -177,12 +185,16 @@ public class StationActivity extends Activity {
 
                             TextView b = new TextView(m_context);
 
-                            b.setText(rowdata.get(j));
+                            b.setText(t);
                             b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                             b.setTypeface(null, Typeface.BOLD);
                             b.setMaxLines(4);
                             b.setLines(4);
-                            b.setGravity(Gravity.CENTER_HORIZONTAL);
+                            b.setGravity(Gravity.LEFT);
+                            if (i == -1) {
+                                b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
+                                b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
+                            }
 
                             parent.addView(iv);
                             parent.addView(b);
@@ -296,15 +308,18 @@ public class StationActivity extends Activity {
                     if (status == 200) {
                         numPages = sess.getPageCount();
                     }
-
                 }
                 if (status == 200) {
                     final int aCount = count;
-                    m_sess.updatePatientList();
-                    m_sess.updateClinicStationList();
+
+                    if (count == 0) {
+                        m_sess.updateClinicStationList();
+                        m_sess.updatePatientList();
+                    }
+
                     displayHeader(aCount);
-                    displayOverallStatus();
                     displayPage(aCount);
+                    displayOverallStatus();
 
                     try {
                         Thread.sleep(15000);

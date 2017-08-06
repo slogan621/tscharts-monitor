@@ -18,6 +18,8 @@
 
 package org.thousandsmiles.thousandsmilesmonitor;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class QueueHeader {
@@ -29,10 +31,13 @@ public class QueueHeader {
     private State m_state;
     private String m_serviceTime = "";
     private String m_willReturn = "";
+    private int m_activePatient;
 
     public void setState(State state) {
         m_state = state;
     }
+
+    public void setActivePatient(int id) { m_activePatient = id; }
 
     public void setServiceTime(String timestr) {
         m_serviceTime = timestr;

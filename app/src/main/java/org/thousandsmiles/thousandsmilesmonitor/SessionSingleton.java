@@ -18,6 +18,7 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 import android.content.Context;
+import android.os.Looper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -186,7 +187,9 @@ public class SessionSingleton {
         } catch (JSONException e) {
             return;
         }
+
         m_clinicStationData.put(id, data);
+
     }
 
     public void clearClinicStationData() {
@@ -200,7 +203,8 @@ public class SessionSingleton {
         if (m_clinicStationData != null) {
             o = m_clinicStationData.get(id);
         }
-        if (o == null) {
+
+        if (o == null && Looper.myLooper() != Looper.getMainLooper()) {
             final ClinicStationREST clinicStationData = new ClinicStationREST(getContext());
             Object lock = clinicStationData.getClinicStationData(id);
 
@@ -221,6 +225,9 @@ public class SessionSingleton {
                 o = m_clinicStationData.get(id);
             }
         }
+        if (o == null) {
+            return o;
+        }
         return o;
     }
 
@@ -231,7 +238,7 @@ public class SessionSingleton {
         if (m_patientData != null) {
             o = m_patientData.get(id);
         }
-        if (o == null) {
+        if (o == null && Looper.myLooper() != Looper.getMainLooper()) {
             final PatientREST patientData = new PatientREST(getContext());
             Object lock = patientData.getPatientData(id);
 
@@ -252,6 +259,9 @@ public class SessionSingleton {
                 o = m_patientData.get(id);
             }
         }
+        if (o == null) {
+            return o;
+        }
         return o;
     }
 
@@ -266,6 +276,13 @@ public class SessionSingleton {
                         int patient = entries.getJSONObject(j).getInt("patient");
                         JSONObject p = getPatientData(patient);
                     }
+                    JSONObject c = m_clinicStationData.get(o.getInt("clinicstation"));
+                    if (c != null) {
+                        if (c.getBoolean("active") == true) {
+                            int activepatient = c.getInt("activepatient");
+                            JSONObject p = getPatientData(activepatient);
+                        }
+                     }
                 } catch (JSONException e) {
 
                 }
@@ -291,6 +308,7 @@ public class SessionSingleton {
         } catch (JSONException e) {
         }
     }
+
     //{"name":"Dental1","level":1,"away":true,"awaytime":30,"clinic":1,"station":1,"active":false,"willreturn":"2017-07-28T04:49:14","id":1}
     public ArrayList<QueueHeader> getStationHeaders(int offset) {
         ArrayList<QueueHeader> queueHeader = new ArrayList<QueueHeader>();
@@ -307,7 +325,7 @@ public class SessionSingleton {
                     df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                     int csid = o.getInt("clinicstation");
-                    JSONObject clinicStation = SessionSingleton.getInstance().getClinicStationData(csid);
+                    JSONObject clinicStation = getClinicStationData(csid);
 
                     rowHeader.setServiceTime(avgServiceTime);
 
@@ -328,6 +346,8 @@ public class SessionSingleton {
                             rowHeader.setWillReturnTime(willret);
                         } else if (clinicStation.getBoolean("active") == true) {
                             rowHeader.setState(QueueHeader.State.ACTIVE);
+                            int activePatient = clinicStation.getInt("activepatient");
+                            rowHeader.setActivePatient(activePatient);
                         } else {
                             rowHeader.setState(QueueHeader.State.WAITING);
                         }
@@ -346,6 +366,44 @@ public class SessionSingleton {
         return queueHeader;
     }
 
+    private String patientToString(int patient, JSONObject p) {
+        String dob;
+        String gender;
+        String ret;
+
+        try {
+            gender = p.getString("gender");
+
+            if (m_lang.equals("en_US")) {
+                dob = String.format(m_ctx.getResources().getString(R.string.dob));
+                if (gender.equals("Female")) {
+                    gender = String.format(m_ctx.getResources().getString(R.string.female));
+                } else {
+                    gender = String.format(m_ctx.getResources().getString(R.string.male));
+                }
+            } else {
+                dob = String.format(m_ctx.getResources().getString(R.string.dob_es));
+                if (gender.equals("Female")) {
+                    gender = String.format(m_ctx.getResources().getString(R.string.female_es));
+                } else {
+                    gender = String.format(m_ctx.getResources().getString(R.string.male_es));
+                }
+            }
+
+            ret = String.format("%d: %s-%s, %c\n%s %s: %s\n",
+                    patient,
+                    p.getString("paternal_last"),
+                    p.getString("maternal_last"),
+                    p.getString("first").charAt(0),
+                    gender,
+                    dob,
+                    p.getString("dob"));
+        } catch (JSONException e) {
+            ret = "";
+        }
+        return ret;
+    }
+
     public ArrayList<String> getRow(int offset, int row) {
         ArrayList<String> rowdata = new ArrayList<String>();
         try {
@@ -358,38 +416,68 @@ public class SessionSingleton {
                     int patient = entries.getJSONObject(row).getInt("patient");
                     String waitTime = entries.getJSONObject(row).getString("estwaittime");
                     JSONObject p = getPatientData(patient);
+                    String patientString = patientToString(patient, p);
                     String estimated;
-                    String dob;
-                    String gender = p.getString("gender");
 
                     if (m_lang.equals("en_US")) {
                         estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time));
-                        dob = String.format(m_ctx.getResources().getString(R.string.dob));
-                        if (gender.equals("Female")) {
-                            gender = String.format(m_ctx.getResources().getString(R.string.female));
-                        } else {
-                            gender = String.format(m_ctx.getResources().getString(R.string.male));
-                        }
                     } else {
                         estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time_es));
-                        dob = String.format(m_ctx.getResources().getString(R.string.dob_es));
-                        if (gender.equals("Female")) {
-                            gender = String.format(m_ctx.getResources().getString(R.string.female_es));
-                        } else {
-                            gender = String.format(m_ctx.getResources().getString(R.string.male_es));
-                        }
                     }
 
-                    rowdata.add(String.format("%d: %s-%s, %c\n%s %s: %s\n%s: %s",
-                                                                  patient,
-                                                                  p.getString("paternal_last"),
-                                                                  p.getString("maternal_last"),
-                                                                  p.getString("first").charAt(0),
-                                                                  gender,
-                                                                  dob,
-                                                                  p.getString("dob"),
-                                                                  estimated,
-                                                                  waitTime));
+                    patientString += String.format("%s: %s\n", estimated, waitTime);
+
+                    rowdata.add(patientString);
+                }
+                catch(org.json.JSONException e) {
+                    rowdata.add("");
+                }
+            }
+        }
+        catch (org.json.JSONException e) {
+        }
+        return rowdata;
+    }
+
+    public ArrayList<String> getActiveRow(int offset) {
+        ArrayList<String> rowdata = new ArrayList<String>();
+        try {
+            JSONArray r = m_queueStatusJSON.getJSONArray("queues");
+            for (int i = offset; i < offset + 5; i++)
+            {
+                try {
+                    JSONObject o = r.getJSONObject(i);
+                    String patientString;
+                    if (o != null) {
+                        int clinicstation = o.getInt("clinicstation");
+
+                        //JSONObject c = null;
+
+                        JSONObject c = getClinicStationData(clinicstation);
+
+                        if (c != null) {
+
+                            if (c.getBoolean("active") == true) {
+
+                                int activePatient = c.getInt("activepatient");
+                                JSONObject p = getPatientData(activePatient);
+
+                                if (p != null) {
+                                    patientString = patientToString(activePatient, p);
+                                } else {
+                                    patientString = "";
+                                }
+                            } else {
+                                patientString = "";
+                            }
+                        } else {
+                            patientString = "";
+                        }
+                    } else {
+                        patientString = "";
+                    }
+
+                    rowdata.add(patientString);
                 }
                 catch(org.json.JSONException e) {
                     rowdata.add("");
