@@ -549,7 +549,6 @@ public class SessionSingleton {
                 }
                 i = i + 1;
             } while(count > 0);
-            //}
         }
         catch (org.json.JSONException e) {
         }
