@@ -38,7 +38,7 @@ public class SessionSingleton {
     private static int m_clinicId;
     private static Context m_ctx;
     private final int m_columnsPerPage = 5;
-    private final int m_maxColumnSize = 7;
+    private final int m_maxColumnSize = 6;
     private String m_lang = "en_US";
     private static JSONObject m_queueStatusJSON;
     private static ArrayList<Integer> m_columnsPerQueue = new ArrayList<Integer>();
@@ -193,27 +193,6 @@ public class SessionSingleton {
         }
         return count;
     }
-
-    /*
-
-
-    public int getPageCount() {
-        int count;
-
-        try {
-            JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            count = r.length() / getPageSize();
-            if (r.length() % getPageSize() > 0) {
-                count += 1;
-            }
-        }
-        catch (org.json.JSONException e) {
-            count = 0;
-        }
-        return count;
-    }
-
-    */
 
     public String getToken() {
         return m_token;
@@ -516,10 +495,12 @@ public class SessionSingleton {
 
     public ArrayList<String> getRow(int offset, int row, int count) {
         ArrayList<String> rowdata = new ArrayList<String>();
+        int maxColumnSize = getMaxColumnSize();
+
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            for (int i = offset; i < offset + count; i++)
-            {
+            int i = offset;
+            do {
                 try {
                     JSONObject o = r.getJSONObject(i);
                     JSONArray entries = o.getJSONArray("entries");
@@ -538,11 +519,37 @@ public class SessionSingleton {
                     patientString += String.format("%s: %s\n", estimated, waitTime);
 
                     rowdata.add(patientString);
-                }
-                catch(org.json.JSONException e) {
+                    count--;
+
+                    if (m_columnsPerQueue.get(i) > 1) {
+                        int columnOffset = maxColumnSize;
+                        for (int j = 0; j < m_columnsPerQueue.get(i) - 1; j++) {
+                            // XXX obviously will need to push something different but for now...
+                            patient = entries.getJSONObject(row + columnOffset).getInt("patient");
+                            waitTime = entries.getJSONObject(row + columnOffset).getString("estwaittime");
+                            p = getPatientData(patient);
+                            patientString = patientToString(patient, p);
+
+                            if (m_lang.equals("en_US")) {
+                                estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time));
+                            } else {
+                                estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time_es));
+                            }
+
+                            patientString += String.format("%s: %s\n", estimated, waitTime);
+
+                            rowdata.add(patientString);
+                            columnOffset += maxColumnSize;
+                            count--;
+                        }
+                    }
+                } catch (org.json.JSONException e) {
                     rowdata.add("");
+                    count--;
                 }
-            }
+                i = i + 1;
+            } while(count > 0);
+            //}
         }
         catch (org.json.JSONException e) {
         }
