@@ -180,13 +180,12 @@ public class StationActivity extends Activity {
                         TableRow tr = new TableRow(m_context);
 
                         for (int j = 0; j < rowdata.size(); j++) {
-
-                            tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
+                            
                             LinearLayout parent = new LinearLayout(m_context);
 
                             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             parent.setOrientation(LinearLayout.HORIZONTAL);
+                            parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
 
                             ImageView iv = new ImageView(m_context);
 
@@ -215,14 +214,11 @@ public class StationActivity extends Activity {
                             parent.addView(iv);
                             parent.addView(b);
 
-                            TableRow.LayoutParams params = (TableRow.LayoutParams)tr.getLayoutParams();
-                            params.weight = 1;
-                            params.width=0;
-                            params.gravity = Gravity.CENTER_HORIZONTAL;
-                            parent.setLayoutParams(params);
+                            parent.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+
                             tr.addView(parent);
                         }
-                        table.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                        table.addView(tr);
                     }
 
                     String status = m_sess.getOverallStatus();
