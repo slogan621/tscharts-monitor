@@ -72,7 +72,7 @@ public class StationActivity extends Activity {
             }
         }
 
-        private void displayHeader(final int offset)
+        private void displayHeader(final int offset, final int count)
         {
             m_sess.setContext(m_context);
             StationActivity.this.runOnUiThread(new Runnable() {
@@ -93,7 +93,7 @@ public class StationActivity extends Activity {
                     int skyBlue = ContextCompat.getColor(m_context, R.color.skyBlue);
                     int yellow = ContextCompat.getColor(m_context, R.color.colorYellow);
 
-                    headers = m_sess.getStationHeaders(offset);
+                    headers = m_sess.getStationHeaders(offset, count);
 
                     TextView text;
 
@@ -124,7 +124,7 @@ public class StationActivity extends Activity {
             });
         }
 
-        private void displayPage(final int offset)
+        private void displayPage(final int offset, final int count)
         {
             m_sess.setContext(m_context);
             StationActivity.this.runOnUiThread(new Runnable() {
@@ -137,28 +137,43 @@ public class StationActivity extends Activity {
                     cleanTable(table);
                     ArrayList<String> labels;
 
-                    labels = m_sess.getLabels(offset);
-                    int len = labels.size();
+                    labels = m_sess.getLabels(offset, count);
+                    int labelCount = labels.size();
 
-                    text = (TextView) findViewById(R.id.stationlabel1);
-                    text.setText(labels.get(0));
-                    text = (TextView) findViewById(R.id.stationlabel2);
-                    text.setText(labels.get(1));
-                    text = (TextView) findViewById(R.id.stationlabel3);
-                    text.setText(labels.get(2));
-                    text = (TextView) findViewById(R.id.stationlabel4);
-                    text.setText(labels.get(3));
-                    text = (TextView) findViewById(R.id.stationlabel5);
-                    text.setText(labels.get(4));
+                    if (labelCount > 0) {
+                        text = (TextView) findViewById(R.id.stationlabel1);
+                        text.setText(labels.get(0));
+                        labelCount--;
+                    }
+                    if (labelCount > 0) {
+                        text = (TextView) findViewById(R.id.stationlabel2);
+                        text.setText(labels.get(1));
+                        labelCount--;
+                    }
+                    if (labelCount > 0) {
+                        text = (TextView) findViewById(R.id.stationlabel3);
+                        text.setText(labels.get(2));
+                        labelCount--;
+                    }
+                    if (labelCount > 0) {
+                        text = (TextView) findViewById(R.id.stationlabel4);
+                        text.setText(labels.get(3));
+                        labelCount--;
+                    }
+                    if (labelCount > 0) {
+                        text = (TextView) findViewById(R.id.stationlabel5);
+                        text.setText(labels.get(4));
+                        labelCount--;
+                    }
 
                     int numRows = m_sess.getNumberOfRows();
                     for (int i = -1; i < numRows; i++) {
                         ArrayList<String> rowdata;
                         if (i == -1) {
-                            rowdata = m_sess.getActiveRow(offset);
+                            rowdata = m_sess.getActiveRow(offset, count);
                             //rowdata = m_sess.getRow(offset, 0);
                         } else {
-                            rowdata = m_sess.getRow(offset, i);
+                            rowdata = m_sess.getRow(offset, i, count);
                         }
 
                         TableRow tr = new TableRow(m_context);
@@ -245,10 +260,10 @@ public class StationActivity extends Activity {
             // get the string from params, which is an array
             Object lock;
             SessionSingleton sess = SessionSingleton.getInstance();
-            int len;
-            int count = 0;
+            int offset = 0;
             int status = -1;
             int numPages = 0;
+            int page = 0;
 
             try {
                 Thread.sleep(5000);
@@ -256,7 +271,7 @@ public class StationActivity extends Activity {
             }
 
             while (true) {
-                if (count == 0) {
+                if (page == 0) {
                     QueueREST queueData = new QueueREST(m_context);
                     lock = queueData.getQueueData(sess.getClinicId());
                     synchronized (lock) {
@@ -306,19 +321,17 @@ public class StationActivity extends Activity {
                         });
                     }
                     if (status == 200) {
+                        m_sess.updateClinicStationList();
+                        m_sess.updatePatientList();
                         numPages = sess.getPageCount();
                     }
                 }
                 if (status == 200) {
-                    final int aCount = count;
 
-                    if (count == 0) {
-                        m_sess.updateClinicStationList();
-                        m_sess.updatePatientList();
-                    }
-
-                    displayHeader(aCount);
-                    displayPage(aCount);
+                    int pageColumnCount = m_sess.getPageColumnCount(page);
+                    offset = m_sess.getFirstQueueThisPage(page);
+                    displayHeader(offset, pageColumnCount);
+                    displayPage(offset, pageColumnCount);
                     displayOverallStatus();
 
                     try {
@@ -326,9 +339,9 @@ public class StationActivity extends Activity {
                     } catch(InterruptedException e) {
                     }
 
-                    count += sess.getPageSize();
-                    if (count >= numPages * sess.getPageSize()) {
-                        count = 0;
+                    page++;
+                    if (page == numPages) {
+                        page = 0;
                         String lang = m_sess.getLanguage();
                         if (lang.equals("en_US")) {
                             m_sess.setLanguage("es_US");

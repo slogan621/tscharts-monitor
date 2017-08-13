@@ -39,7 +39,6 @@ public class QueueREST extends RESTful {
     private final Object m_lock = new Object();
 
     private class ResponseListener implements Response.Listener<JSONObject> {
-
         @Override
         public void onResponse(JSONObject response) {
 
@@ -107,7 +106,6 @@ public class QueueREST extends RESTful {
             headers.put("Authorization", SessionSingleton.getInstance().getToken());
             return headers;
         }
-
     }
 
     public QueueREST(Context context) {
