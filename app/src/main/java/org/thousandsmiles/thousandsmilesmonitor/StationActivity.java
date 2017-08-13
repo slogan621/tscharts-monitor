@@ -27,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -62,13 +63,21 @@ public class StationActivity extends Activity {
             });
         }
 
-        private void cleanTable(TableLayout table) {
+        private void cleanStationTable(TableLayout table) {
 
-            int childCount = table.getChildCount();
+            if (table != null) {
+                int childCount = table.getChildCount();
 
-            // Remove all rows except the headers and other static rows near the top
-            if (childCount > 4) {
-                table.removeViews(4, childCount - 4);
+                // Remove all rows except the headers and other static rows near the top
+                if (childCount > 4) {
+                    table.removeViews(4, childCount - 4);
+                }
+            }
+        }
+
+        private void removeTableRowChildren(TableRow trow) {
+            if (trow != null) {
+                ((ViewGroup) trow).removeAllViews();
             }
         }
 
@@ -79,14 +88,6 @@ public class StationActivity extends Activity {
                 public void run() {
 
                     ArrayList<QueueHeader> headers;
-                    int [] headerIds = {
-                            R.id.stationheader1,
-                            R.id.stationheader2,
-                            R.id.stationheader3,
-                            R.id.stationheader4,
-                            R.id.stationheader5,
-                    };
-                    QueueHeader item;
                     ArrayList<String> labels;
                     String label = "";
                     int green = ContextCompat.getColor(m_context, R.color.colorGreen);
@@ -95,32 +96,40 @@ public class StationActivity extends Activity {
 
                     headers = m_sess.getStationHeaders(offset, count);
 
-                    TextView text;
+                    TableRow trow = (TableRow) findViewById(R.id.stationheaders);
 
-                    for (int h = 0; h < headerIds.length; h++) {
-                        text = (TextView) findViewById(headerIds[h]);
-                        text.setText("");
-                    }
+                    if (trow != null) {
+                        removeTableRowChildren(trow);
 
-                    for (int h = 0; h < headers.size(); h++) {
-                        text = (TextView) findViewById(headerIds[h]);
-                        labels = headers.get(h).getLabels();
-                        label = "";
-                        for (int i = 0; i < labels.size(); i++) {
-                            label = label + labels.get(i);
-                            label += "\n";
+                        for (int h = 0; h < headers.size(); h++) {
+                            TextView b = new TextView(m_context);
+
+                            labels = headers.get(h).getLabels();
+                            label = "";
+                            for (int i = 0; i < labels.size(); i++) {
+                                label = label + labels.get(i);
+                                label += "\n";
+                            }
+                            b.setText(label);
+                            QueueHeader.State state = headers.get(h).getState();
+                            if (state == QueueHeader.State.WAITING) {
+                                b.setTextColor(yellow);
+                            } else if (state == QueueHeader.State.AWAY) {
+                                b.setTextColor(skyBlue);
+                            } else {
+                                b.setTextColor(green);
+                            }
+                            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                            b.setTypeface(null, Typeface.BOLD);
+                            b.setGravity(Gravity.CENTER_HORIZONTAL);
+                            b.setLines(4);
+                            b.setMaxLines(4);
+                            b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+
+                            trow.addView(b);
                         }
-                        text.setText(label);
-                        QueueHeader.State state = headers.get(h).getState();
-                        if (state == QueueHeader.State.WAITING) {
-                            text.setTextColor(yellow);
-                        } else if (state == QueueHeader.State.AWAY) {
-                            text.setTextColor(skyBlue);
-                        } else {
-                            text.setTextColor(green);
-                        }
-                    }
-                 }
+                   }
+                }
             });
         }
 
@@ -134,36 +143,29 @@ public class StationActivity extends Activity {
                     text.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date()));
 
                     TableLayout table = (TableLayout) findViewById(R.id.stationtable);
-                    cleanTable(table);
+                    cleanStationTable(table);
                     ArrayList<String> labels;
 
                     labels = m_sess.getLabels(offset, count);
                     int labelCount = labels.size();
 
-                    if (labelCount > 0) {
-                        text = (TextView) findViewById(R.id.stationlabel1);
-                        text.setText(labels.get(0));
-                        labelCount--;
-                    }
-                    if (labelCount > 0) {
-                        text = (TextView) findViewById(R.id.stationlabel2);
-                        text.setText(labels.get(1));
-                        labelCount--;
-                    }
-                    if (labelCount > 0) {
-                        text = (TextView) findViewById(R.id.stationlabel3);
-                        text.setText(labels.get(2));
-                        labelCount--;
-                    }
-                    if (labelCount > 0) {
-                        text = (TextView) findViewById(R.id.stationlabel4);
-                        text.setText(labels.get(3));
-                        labelCount--;
-                    }
-                    if (labelCount > 0) {
-                        text = (TextView) findViewById(R.id.stationlabel5);
-                        text.setText(labels.get(4));
-                        labelCount--;
+                    TableRow trow = (TableRow) findViewById(R.id.stationlabels);
+
+                    if (trow != null) {
+                        removeTableRowChildren(trow);
+
+                        for (int i = 0; i < labelCount; i++) {
+                            TextView b = new TextView(m_context);
+
+                            b.setText(labels.get(i));
+                            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                            b.setTypeface(null, Typeface.BOLD);
+                            b.setGravity(Gravity.CENTER_HORIZONTAL);
+                            b.setTextColor(ContextCompat.getColor(m_context, R.color.colorWhite));
+                            b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+
+                            trow.addView(b);
+                        }
                     }
 
                     int numRows = m_sess.getNumberOfRows();
@@ -171,7 +173,6 @@ public class StationActivity extends Activity {
                         ArrayList<String> rowdata;
                         if (i == -1) {
                             rowdata = m_sess.getActiveRow(offset, count);
-                            //rowdata = m_sess.getRow(offset, 0);
                         } else {
                             rowdata = m_sess.getRow(offset, i, count);
                         }

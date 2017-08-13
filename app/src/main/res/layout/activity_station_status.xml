@@ -80,7 +80,8 @@
                 android:layout_width="0dip"
                 android:gravity="center_horizontal"
                 android:layout_weight="1"
-                android:typeface="serif"></TextView>
+                android:typeface="serif">
+            </TextView>
             <TextView
                 android:id="@+id/stationlabel2"
                 android:text=""
@@ -91,7 +92,8 @@
                 android:layout_width="0dip"
                 android:gravity="center_horizontal"
                 android:layout_weight="1"
-                android:typeface="serif"></TextView>
+                android:typeface="serif">
+            </TextView>
             <TextView
                 android:id="@+id/stationlabel3"
                 android:text=""
@@ -102,7 +104,8 @@
                 android:textStyle="bold"
                 android:layout_width="0dip"
                 android:layout_weight="1"
-                android:typeface="serif"></TextView>
+                android:typeface="serif">
+            </TextView>
             <TextView
                 android:id="@+id/stationlabel4"
                 android:text=""
@@ -113,7 +116,8 @@
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:typeface="serif"></TextView>
+                android:typeface="serif">
+            </TextView>
             <TextView
                 android:id="@+id/stationlabel5"
                 android:text=""
@@ -124,7 +128,8 @@
                 android:textStyle="bold"
                 android:layout_width="0dip"
                 android:layout_weight="1"
-                android:typeface="serif"></TextView>
+                android:typeface="serif">
+            </TextView>
         </TableRow>
         <TableRow
             android:padding="10dip"
@@ -139,7 +144,7 @@
                 android:padding="5dip" />
         </TableRow>
         <TableRow
-            android:id="@+id/stationheader"
+            android:id="@+id/stationheaders"
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
             <TextView
