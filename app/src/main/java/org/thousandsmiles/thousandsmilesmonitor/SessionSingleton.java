@@ -214,12 +214,15 @@ public class SessionSingleton {
             while (count > 0)
             {
                 if (queue < r.length()) {
+                    String label = "";
                     try {
                         JSONObject o = r.getJSONObject(queue);
                         if (en_US) {
-                            labels.add(o.getString("name"));
+                            label = o.getString("name");
+                            labels.add(label);
                         } else {
-                            labels.add(o.getString("name_es"));
+                            label = o.getString("name_es");
+                            labels.add(label);
                         }
                         count--;
                     } catch (org.json.JSONException e) {
@@ -230,7 +233,7 @@ public class SessionSingleton {
                     int columnsInQueue = m_columnsPerQueue.get(queue);
                     int i = 1;
                     while (i < columnsInQueue) {
-                        labels.add("");
+                        labels.add(String.format("%s (%d)", label, i + 1));
                         count--;
                         i++;
                     }
@@ -438,9 +441,10 @@ public class SessionSingleton {
                     count--;
 
                     if (m_columnsPerQueue.get(i) > 1) {
+                        QueueHeader stubHeader = new QueueHeader();
+                        stubHeader.setStub(true);                // display header as blanks
                         for (int j = 0; j < m_columnsPerQueue.get(i) - 1; j++) {
-                            // XXX obviously will need to push something different but for now...
-                            queueHeader.add(rowHeader);
+                            queueHeader.add(stubHeader);
                             count--;
                         }
                     }

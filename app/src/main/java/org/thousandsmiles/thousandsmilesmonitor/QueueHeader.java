@@ -32,9 +32,14 @@ public class QueueHeader {
     private String m_serviceTime = "";
     private String m_willReturn = "";
     private int m_activePatient;
+    private boolean m_stub = false;   // if stub, then display empty header
 
     public void setState(State state) {
         m_state = state;
+    }
+
+    public void setStub(boolean stub) {
+        m_stub = stub;
     }
 
     public void setActivePatient(int id) { m_activePatient = id; }
@@ -81,6 +86,10 @@ public class QueueHeader {
         String avgServiceTime;
         String state;
         String willReturn;
+
+        if (m_stub == true) {
+            return ret;
+        }
 
         if (m_sess.getLanguage().equals("en_US")) {
             state = String.format(m_sess.getContext().getResources().getString(R.string.state));
