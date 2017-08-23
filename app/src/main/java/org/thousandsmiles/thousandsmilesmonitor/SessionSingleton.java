@@ -509,18 +509,18 @@ public class SessionSingleton {
                     JSONObject o = r.getJSONObject(i);
                     JSONArray entries = o.getJSONArray("entries");
                     int patient = entries.getJSONObject(row).getInt("patient");
-                    String waitTime = entries.getJSONObject(row).getString("estwaittime");
+                    String waitTime = entries.getJSONObject(row).getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = patientToString(patient, p);
-                    String estimated;
+                    String waiting;
 
                     if (m_lang.equals("en_US")) {
-                        estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time));
+                        waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time));
                     } else {
-                        estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time_es));
+                        waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time_es));
                     }
 
-                    patientString += String.format("%s: %s\n", estimated, waitTime);
+                    patientString += String.format("%s: %s\n", waiting, waitTime);
 
                     rowdata.add(patientString);
                     count--;
@@ -530,17 +530,17 @@ public class SessionSingleton {
                         for (int j = 0; j < m_columnsPerQueue.get(i) - 1; j++) {
                             // XXX obviously will need to push something different but for now...
                             patient = entries.getJSONObject(row + columnOffset).getInt("patient");
-                            waitTime = entries.getJSONObject(row + columnOffset).getString("estwaittime");
+                            waitTime = entries.getJSONObject(row + columnOffset).getString("waittime");
                             p = getPatientData(patient);
                             patientString = patientToString(patient, p);
 
                             if (m_lang.equals("en_US")) {
-                                estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time));
+                                waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time));
                             } else {
-                                estimated = String.format(m_ctx.getResources().getString(R.string.estimated_waiting_time_es));
+                                waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time_es));
                             }
 
-                            patientString += String.format("%s: %s\n", estimated, waitTime);
+                            patientString += String.format("%s: %s\n", waiting, waitTime);
 
                             rowdata.add(patientString);
                             columnOffset += maxColumnSize;

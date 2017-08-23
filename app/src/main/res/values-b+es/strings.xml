@@ -38,10 +38,13 @@ Error desconocido. Informe este problema</string>
     <string formatted="false" name="format_status_banner_es">Esperar medio: %s Min de Esperar: %s Max de Esperar: %s Linea Media: %d Linea Min: %d Linea Max: %d Número de pacientes en espera: %d</string>
 
     <string name="dob">DOB</string>
-    <string name="dob_es">Fecha de nacimiento</string>
+    <string name="dob_es">Fec. Nac.</string>
 
-    <string name="estimated_waiting_time">Estimated Wait</string>
-    <string name="estimated_waiting_time_es">Espera Estimada</string>
+    <string name="estimated_waiting_time">Est. Wait</string>
+    <string name="estimated_waiting_time_es">Espera Est.</string>
+
+    <string name="waiting_time">Wait</string>
+    <string name="waiting_time_es">Espera</string>
 
     <string name="male">Male</string>
     <string name="male_es">Masculino</string>
