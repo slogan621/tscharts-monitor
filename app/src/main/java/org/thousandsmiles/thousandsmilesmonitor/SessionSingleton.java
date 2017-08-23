@@ -174,7 +174,7 @@ public class SessionSingleton {
                     queueCount += 1;
                 }
                 m_columnsPerQueue.add(queueCount);
-                if (i == r.length() - 1 || queueCount + totalThisPage > getColumnsPerPage()) {
+                if (i == r.length() - 1 || queueCount + totalThisPage >= getColumnsPerPage()) {
                     count++;
                     if (i == r.length() - 1) {
                         totalThisPage += queueCount;
