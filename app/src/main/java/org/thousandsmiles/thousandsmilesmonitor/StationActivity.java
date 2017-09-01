@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -41,9 +42,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class StationActivity extends Activity {
     private static final int TIME_OUT = 15000;
     Context context;
+    GetAndDisplayTask m_task = null;
 
     private class GetAndDisplayTask extends AsyncTask<String, Integer, String> {
 
@@ -262,12 +266,13 @@ public class StationActivity extends Activity {
             int numPages = 0;
             int page = 0;
 
-            try {
-                Thread.sleep(5000);
-            } catch(InterruptedException e) {
-            }
 
             while (true) {
+                if (isCancelled()) {
+                    Log.i("doInBackground", "task is cancelled, leaving");
+                    break;
+                }
+                Log.i("Station Activity", "Top of Loop");
                 if (page == 0) {
                     QueueREST queueData = new QueueREST(m_context);
                     lock = queueData.getQueueData(sess.getClinicId());
@@ -331,6 +336,7 @@ public class StationActivity extends Activity {
                     displayPage(offset, pageColumnCount);
                     displayOverallStatus();
 
+
                     try {
                         Thread.sleep(15000);
                     } catch(InterruptedException e) {
@@ -347,12 +353,15 @@ public class StationActivity extends Activity {
                         }
                     }
                 } else {
+
                     try {
                         Thread.sleep(5000);
                     } catch(InterruptedException e) {
                     }
+
                 }
             }
+            return("");
         }
 
         // This is called from background thread but runs in UI
@@ -376,15 +385,6 @@ public class StationActivity extends Activity {
         super.onResume();
         HideyHelper h = new HideyHelper();
         h.toggleHideyBar(this);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_station_status);
-        context = this.getApplicationContext();
 
         final ClinicREST clinicREST = new ClinicREST(context);
 
@@ -414,9 +414,9 @@ public class StationActivity extends Activity {
                 SessionSingleton data = SessionSingleton.getInstance();
                 int status = clinicREST.getStatus();
                 if (status == 200) {
-                    GetAndDisplayTask t = new GetAndDisplayTask();
-                    t.setContext(getApplicationContext());
-                    t.execute();
+                    m_task = new GetAndDisplayTask();
+                    m_task.setContext(getApplicationContext());
+                    m_task.execute();
                     return;
                 } else if (status == 101) {
                     StationActivity.this.runOnUiThread(new Runnable() {
@@ -453,6 +453,24 @@ public class StationActivity extends Activity {
             }
         };
         thread.start();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setContentView(R.layout.activity_station_status);
+        context = this.getApplicationContext();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(m_task!=null){
+            m_task.cancel(true);
+            m_task = null;
+        }
+        super.onBackPressed();
     }
 }
 
