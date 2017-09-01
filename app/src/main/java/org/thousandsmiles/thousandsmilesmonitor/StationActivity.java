@@ -27,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,8 +40,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class StationActivity extends Activity {
     private static final int TIME_OUT = 15000;
