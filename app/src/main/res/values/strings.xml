@@ -15,6 +15,8 @@
     <string name="error_internal_bad_request">Bad Request. Please report this problem</string>
     <string name="error_internal_error">Internal Error. Please report this problem</string>
     <string name="error_unknown">Unknown Error. Please report this problem</string>
+    <string name="error_clinicstationlist">Unable to read clinic station list</string>
+    <string name="error_patientlist">Unable to read patient list</string>
     <string name="error_unable_to_connect">Unable to connect. Make sure wireless is enabled, that the IP address and port settings are correct, and internet connectivity is present.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

@@ -319,9 +319,26 @@ public class StationActivity extends Activity {
                             }
                         });
                     }
+
+                    // following code issues requests to the backend, if they fail, return to top of loop
                     if (status == 200) {
-                        m_sess.updateClinicStationList();
-                        m_sess.updatePatientList();
+                        if (m_sess.updateClinicStationList() == false) {
+                            StationActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), R.string.error_clinicstationlist, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            continue;
+                        }
+                        if (m_sess.updatePatientList() == false) {
+                            StationActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), R.string.error_patientlist, Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                            continue;
+                        }
                         numPages = sess.getPageCount();
                     }
                 }
@@ -454,7 +471,6 @@ public class StationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_station_status);

@@ -346,7 +346,8 @@ public class SessionSingleton {
         return o;
     }
 
-    public void updatePatientList() {
+    public boolean updatePatientList() {
+        boolean ret = true;
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
             for (int i = 0; i < r.length(); i++) {
@@ -356,24 +357,34 @@ public class SessionSingleton {
                     for (int j = 0; j < entries.length(); j++) {
                         int patient = entries.getJSONObject(j).getInt("patient");
                         JSONObject p = getPatientData(patient);
+                        if (p == null) {
+                            ret = false;
+                            break;
+                        }
                     }
                     JSONObject c = m_clinicStationData.get(o.getInt("clinicstation"));
                     if (c != null) {
                         if (c.getBoolean("active") == true) {
                             int activepatient = c.getInt("activepatient");
                             JSONObject p = getPatientData(activepatient);
+                            if (p == null) {
+                                ret = false;
+                            }
                         }
                      }
                 } catch (JSONException e) {
-
+                    ret = false;
                 }
 
             }
         } catch (JSONException e) {
+            ret = false;
         }
+        return ret;
     }
 
-    public void updateClinicStationList() {
+    public boolean updateClinicStationList() {
+        boolean ret = true;
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
             clearClinicStationData();
@@ -381,13 +392,17 @@ public class SessionSingleton {
                 try {
                     JSONObject o = r.getJSONObject(i);
                     int clinicstation = o.getInt("clinicstation");
-                    getClinicStationData(clinicstation);
+                    if (getClinicStationData(clinicstation) == null) {
+                        ret = false;
+                    }
                 } catch (JSONException e) {
                 }
 
             }
         } catch (JSONException e) {
+            ret = false;
         }
+        return ret;
     }
 
     //{"name":"Dental1","level":1,"away":true,"awaytime":30,"clinic":1,"station":1,"active":false,"willreturn":"2017-07-28T04:49:14","id":1}

@@ -20,6 +20,9 @@ Este campo es requerido</string>
 Solicitud incorrecta. Informe este problema</string>
     <string name="error_internal_error">
 Error interno. Informe este problema</string>
+    <string name="error_clinicstationlist">No se puede leer la lista de la estación clínica</string>
+    <string name="error_patientlist">
+No se puede leer la lista de pacientes</string>
     <string name="error_unknown">
 Error desconocido. Informe este problema</string>
     <string name="error_unable_to_connect">No puede conectarse. Asegúrese de que la conexión inalámbrica está activada, de que la dirección IP y la configuración del puerto son correctas y que hay conectividad a Internet..</string>
