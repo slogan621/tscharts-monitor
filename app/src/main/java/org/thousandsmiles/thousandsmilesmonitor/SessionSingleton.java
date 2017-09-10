@@ -19,6 +19,9 @@ package org.thousandsmiles.thousandsmilesmonitor;
 
 import android.content.Context;
 import android.os.Looper;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,8 +40,10 @@ public class SessionSingleton {
     private static String m_token = "";
     private static int m_clinicId;
     private static Context m_ctx;
-    private final int m_columnsPerPage = 5;
-    private final int m_maxColumnSize = 6;
+    private int m_columnsPerPage = 5;
+    private int m_maxColumnSize = 6;
+    private int m_height = -1;
+    private int m_width = -1;
     private String m_lang = "en_US";
     private static JSONObject m_queueStatusJSON;
     private static ArrayList<Integer> m_columnsPerQueue = new ArrayList<Integer>();
@@ -110,10 +115,29 @@ public class SessionSingleton {
     }
 
     public int getColumnsPerPage() {
+        if (m_width == -1 && m_height == -1) {
+            getScreenResolution(m_ctx);
+        }
+        m_columnsPerPage = m_width / 256;
         return m_columnsPerPage;
     }
 
+    private void getScreenResolution(Context context)
+    {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        m_width = metrics.widthPixels;
+        m_height = metrics.heightPixels;
+    }
+
     public int getMaxColumnSize() {
+        if (m_width == -1 && m_height == -1) {
+            getScreenResolution(m_ctx);
+        }
+
+        m_maxColumnSize = m_height / 150;
         return m_maxColumnSize;
     }
 
