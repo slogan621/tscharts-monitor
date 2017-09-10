@@ -483,7 +483,9 @@ public class StationActivity extends Activity {
             m_task.cancel(true);
             m_task = null;
         }
-        super.onBackPressed();
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 }
 
