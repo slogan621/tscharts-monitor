@@ -122,6 +122,11 @@ public class SessionSingleton {
         return m_columnsPerPage;
     }
 
+    public void clearPatientData()
+    {
+        m_patientData.clear();
+    }
+
     private void getScreenResolution(Context context)
     {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

@@ -358,6 +358,7 @@ public class StationActivity extends Activity {
 
                     page++;
                     if (page == numPages) {
+                        m_sess.clearPatientData();
                         page = 0;
                         String lang = m_sess.getLanguage();
                         if (lang.equals("en_US")) {
