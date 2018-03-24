@@ -48,7 +48,7 @@
     <string name="male_es">Masculino</string>
 
     <string name="female">Female</string>
-    <string name="female_es">Hembra</string>
+    <string name="female_es">Femenina</string>
 
     <string name="away">Away</string>
     <string name="away_es">Fuera</string>
@@ -66,9 +66,9 @@
     <string name="willreturn_es">Regresará</string>
 
     <string name="avgservicetime">Avg Service Time</string>
-    <string name="avgservicetime_es">Tiempo Romedio de Servicio</string>
+    <string name="avgservicetime_es">Tiempo Promedio de Servicio</string>
 
     <string name="clinicstationstatus">Clinic Station Status</string>
-    <string name="clinicstationstatus_es">Estado de la Clínica</string>
+    <string name="clinicstationstatus_es">Estado de las Estaciones de la Clínica</string>
 
     </resources>
