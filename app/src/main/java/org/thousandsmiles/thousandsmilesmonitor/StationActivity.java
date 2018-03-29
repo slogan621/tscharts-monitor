@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2018
+ * (C) Copyright Thousand Smiles Foundation 2017-2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,7 +139,6 @@ public class StationActivity extends Activity {
             m_sess.setContext(m_context);
             StationActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
-
                     TextView text = (TextView) findViewById(R.id.clinicdatetime);
                     text.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date()));
 
@@ -164,7 +163,6 @@ public class StationActivity extends Activity {
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
                             b.setTextColor(ContextCompat.getColor(m_context, R.color.colorWhite));
                             b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
-
                             trow.addView(b);
                         }
                     }
@@ -185,28 +183,33 @@ public class StationActivity extends Activity {
                             LinearLayout parent = new LinearLayout(m_context);
 
                             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
                             parent.setOrientation(LinearLayout.HORIZONTAL);
                             parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
 
                             ImageView iv = new ImageView(m_context);
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
+                            iv.setLayoutParams(layoutParams);
 
                             String t = rowdata.get(j);
                             if (t.equals("") == false) {
                                 if (t.indexOf("Male") >= 0 || t.indexOf("Mascul") >= 0) {
-                                    iv.setImageResource(R.drawable.imageboywhitehalf);
+                                    //iv.setImageResource(R.drawable.imageboywhitehalf);
+                                    iv.setImageResource(R.drawable.boyfront);
                                 } else {
-                                    iv.setImageResource(R.drawable.imagegirlwhitehalf);
+                                    //iv.setImageResource(R.drawable.imagegirlwhitehalf);
+                                    iv.setImageResource(R.drawable.girlfront);
                                 }
                             }
 
                             TextView b = new TextView(m_context);
 
                             b.setText(t);
-                            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                             b.setTypeface(null, Typeface.BOLD);
                             b.setMaxLines(4);
                             b.setLines(4);
-                            b.setGravity(Gravity.LEFT);
+                            b.setGravity(Gravity.CENTER_HORIZONTAL);
                             if (i == -1) {
                                 b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
                                 b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
@@ -350,9 +353,8 @@ public class StationActivity extends Activity {
                     displayPage(offset, pageColumnCount);
                     displayOverallStatus();
 
-
                     try {
-                        Thread.sleep(15000);
+                        Thread.sleep(20000);
                     } catch(InterruptedException e) {
                     }
 
@@ -373,7 +375,6 @@ public class StationActivity extends Activity {
                         Thread.sleep(5000);
                     } catch(InterruptedException e) {
                     }
-
                 }
             }
             return("");

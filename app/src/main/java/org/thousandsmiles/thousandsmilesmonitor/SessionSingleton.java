@@ -118,7 +118,7 @@ public class SessionSingleton {
         if (m_width == -1 && m_height == -1) {
             getScreenResolution(m_ctx);
         }
-        m_columnsPerPage = m_width / 256;
+        m_columnsPerPage = m_width / 300;
         return m_columnsPerPage;
     }
 
@@ -142,7 +142,7 @@ public class SessionSingleton {
             getScreenResolution(m_ctx);
         }
 
-        m_maxColumnSize = m_height / 150;
+        m_maxColumnSize = m_height / 200;
         return m_maxColumnSize;
     }
 
@@ -205,13 +205,11 @@ public class SessionSingleton {
                 m_columnsPerQueue.add(queueCount);
                 if (i == r.length() - 1 || queueCount + totalThisPage >= getColumnsPerPage() - 1) {
                     count++;
-                    if (i == r.length() - 1) {
-                        totalThisPage += queueCount;
-                    }
-                    m_pageColumnCount.add(totalThisPage);
-                    m_firstQueueThisPage.add(firstQueueThisPage);
-                    firstQueueThisPage = i;
                     totalThisPage = queueCount;    // start counting for next page
+                    m_pageColumnCount.add(totalThisPage);
+                    firstQueueThisPage = i;
+                    m_firstQueueThisPage.add(firstQueueThisPage);
+
                 } else {
                     totalThisPage += queueCount;
                 }
@@ -220,6 +218,7 @@ public class SessionSingleton {
         catch (org.json.JSONException e) {
             count = 0;
         }
+
         return count;
     }
 
@@ -527,6 +526,14 @@ public class SessionSingleton {
                 }
             }
 
+            ret = String.format("%05d %s\n%s\n%s-%s %s\n",
+                    patient,
+                    p.getString("dob"),
+                    gender,
+                    p.getString("paternal_last"),
+                    p.getString("maternal_last").charAt(0),
+                    p.getString("first"));
+            /*
             ret = String.format("%d: %s-%s, %c\n%s %s: %s\n",
                     patient,
                     p.getString("paternal_last"),
@@ -535,6 +542,7 @@ public class SessionSingleton {
                     gender,
                     dob,
                     p.getString("dob"));
+                    */
         } catch (JSONException e) {
             ret = "";
         }
