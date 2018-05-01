@@ -27,6 +27,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
 
+import org.thousandsmiles.tscharts_lib.HideyHelper;
+
 public class SplashActivity extends Activity {
     private static final int SPLASH_TIME_OUT = 4000;
     Context context;
