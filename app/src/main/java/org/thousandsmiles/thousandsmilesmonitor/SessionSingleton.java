@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,9 +38,6 @@ import java.util.TimeZone;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
-    private static String m_token = "";
-    private static int m_clinicId;
-    private static Context m_ctx;
     private int m_columnsPerPage = 5;
     private int m_maxColumnSize = 6;
     private int m_height = -1;
@@ -51,9 +49,22 @@ public class SessionSingleton {
     private static ArrayList<Integer> m_firstQueueThisPage = new ArrayList<Integer>();
     private static HashMap<Integer, JSONObject> m_patientData = new HashMap<Integer, JSONObject>();
     private static HashMap<Integer, JSONObject> m_clinicStationData = new HashMap<Integer, JSONObject>();
+    private CommonSessionSingleton m_commonSessionSingleton = null;
 
-    public void setToken(String token) {
-        m_token = String.format("Token %s", token);
+    public CommonSessionSingleton getCommonSessionSingleton()
+    {
+        if (m_commonSessionSingleton == null) {
+            m_commonSessionSingleton = CommonSessionSingleton.getInstance();
+        }
+        return m_commonSessionSingleton;
+    }
+
+    public Context getContext() {
+        return getCommonSessionSingleton().getContext();
+    }
+
+    public void setContext(Context ctx) {
+        getCommonSessionSingleton().setContext(ctx);
     }
 
     public void setQueueStatusJSON(JSONObject obj)
@@ -93,9 +104,9 @@ public class SessionSingleton {
             numwaiting = status.getInt("numwaiting");
             String format;
             if (m_lang.equals("en_US")) {
-                format = m_ctx.getResources().getString(R.string.format_status_banner);
+                format = getContext().getResources().getString(R.string.format_status_banner);
             } else {
-                format = m_ctx.getResources().getString(R.string.format_status_banner_es);
+                format = getContext().getResources().getString(R.string.format_status_banner_es);
             }
             ret =  String.format(format, avgwait, minwait, maxwait, avgq, minq, maxq, numwaiting);
         }
@@ -116,7 +127,7 @@ public class SessionSingleton {
 
     public int getColumnsPerPage() {
         if (m_width == -1 && m_height == -1) {
-            getScreenResolution(m_ctx);
+            getScreenResolution(getContext());
         }
         m_columnsPerPage = m_width / 300;
         return m_columnsPerPage;
@@ -139,7 +150,7 @@ public class SessionSingleton {
 
     public int getMaxColumnSize() {
         if (m_width == -1 && m_height == -1) {
-            getScreenResolution(m_ctx);
+            getScreenResolution(getContext());
         }
 
         m_maxColumnSize = m_height / 200;
@@ -222,12 +233,8 @@ public class SessionSingleton {
         return count;
     }
 
-    public String getToken() {
-        return m_token;
-    }
-
     public void setClinicId(int id) {
-        m_clinicId = id;
+        m_commonSessionSingleton.setClinicId(id);
     }
 
     public ArrayList<String> getLabels(int offset, int count) {
@@ -511,18 +518,18 @@ public class SessionSingleton {
             gender = p.getString("gender");
 
             if (m_lang.equals("en_US")) {
-                dob = String.format(m_ctx.getResources().getString(R.string.dob));
+                dob = String.format(getContext().getResources().getString(R.string.dob));
                 if (gender.equals("Female")) {
-                    gender = String.format(m_ctx.getResources().getString(R.string.female));
+                    gender = String.format(getContext().getResources().getString(R.string.female));
                 } else {
-                    gender = String.format(m_ctx.getResources().getString(R.string.male));
+                    gender = String.format(getContext().getResources().getString(R.string.male));
                 }
             } else {
-                dob = String.format(m_ctx.getResources().getString(R.string.dob_es));
+                dob = String.format(getContext().getResources().getString(R.string.dob_es));
                 if (gender.equals("Female")) {
-                    gender = String.format(m_ctx.getResources().getString(R.string.female_es));
+                    gender = String.format(getContext().getResources().getString(R.string.female_es));
                 } else {
-                    gender = String.format(m_ctx.getResources().getString(R.string.male_es));
+                    gender = String.format(getContext().getResources().getString(R.string.male_es));
                 }
             }
 
@@ -567,9 +574,9 @@ public class SessionSingleton {
                     String waiting;
 
                     if (m_lang.equals("en_US")) {
-                        waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time));
+                        waiting = String.format(getContext().getResources().getString(R.string.waiting_time));
                     } else {
-                        waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time_es));
+                        waiting = String.format(getContext().getResources().getString(R.string.waiting_time_es));
                     }
 
                     patientString += String.format("%s: %s\n", waiting, waitTime);
@@ -587,9 +594,9 @@ public class SessionSingleton {
                             patientString = patientToString(patient, p);
 
                             if (m_lang.equals("en_US")) {
-                                waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time));
+                                waiting = String.format(getContext().getResources().getString(R.string.waiting_time));
                             } else {
-                                waiting = String.format(m_ctx.getResources().getString(R.string.waiting_time_es));
+                                waiting = String.format(getContext().getResources().getString(R.string.waiting_time_es));
                             }
 
                             patientString += String.format("%s: %s\n", waiting, waitTime);
@@ -669,7 +676,7 @@ public class SessionSingleton {
     }
 
     public int getClinicId() {
-        return m_clinicId;
+        return m_commonSessionSingleton.getClinicId();
     }
 
     public static SessionSingleton getInstance() {
@@ -677,14 +684,6 @@ public class SessionSingleton {
             m_instance = new SessionSingleton();
         }
         return m_instance;
-    }
-
-    public void setContext(Context ctx) {
-        m_ctx = ctx;
-    }
-
-    public Context getContext() {
-        return m_ctx;
     }
 }
 

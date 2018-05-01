@@ -52,6 +52,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.thousandsmiles.tscharts_lib.LoginREST;
+
 import java.util.ArrayList;
 import java.util.List;
 
