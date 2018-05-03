@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.thousandsmiles.tscharts_lib.ClinicREST;
+import org.thousandsmiles.tscharts_lib.HideyHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
