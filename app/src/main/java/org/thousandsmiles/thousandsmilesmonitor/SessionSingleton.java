@@ -201,6 +201,7 @@ public class SessionSingleton {
         int maxColumnSize = getMaxColumnSize();
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
+            //m_firstQueueThisPage.add(0);      // page 0 always starts with queue 0
             for (int i = 0; i < r.length(); i++) {
                 int queueCount;
                 JSONObject o = r.getJSONObject(i);
@@ -214,15 +215,15 @@ public class SessionSingleton {
                     queueCount += 1;
                 }
                 m_columnsPerQueue.add(queueCount);
-                if (i == r.length() - 1 || queueCount + totalThisPage >= getColumnsPerPage() - 1) {
+                if (i == 0 || i == r.length() - 1 || queueCount + totalThisPage >= getColumnsPerPage() - 1) {
                     count++;
                     totalThisPage = queueCount;    // start counting for next page
                     m_pageColumnCount.add(totalThisPage);
                     firstQueueThisPage = i;
                     m_firstQueueThisPage.add(firstQueueThisPage);
-
                 } else {
                     totalThisPage += queueCount;
+                    count++;
                 }
             }
         }
@@ -533,7 +534,7 @@ public class SessionSingleton {
                 }
             }
 
-            ret = String.format("%05d %s\n%s\n%s-%s %s\n",
+            ret = String.format("%05d %s\n%s\n%10s-%s %10s\n",
                     patient,
                     p.getString("dob"),
                     gender,

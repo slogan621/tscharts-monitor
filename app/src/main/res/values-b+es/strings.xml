@@ -66,6 +66,6 @@
     <string name="avgservicetime_es">Tiempo Promedio de Servicio</string>
 
     <string name="clinicstationstatus">Clinic Station Status</string>
-    <string name="clinicstationstatus_es">Estado de las Estaciones de la Clínica</string>
+    <string name="clinicstationstatus_es">Estados</string>
 
 </resources>

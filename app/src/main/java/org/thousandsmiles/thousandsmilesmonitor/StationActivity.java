@@ -93,6 +93,7 @@ public class StationActivity extends Activity {
 
                     ArrayList<QueueHeader> headers;
                     ArrayList<String> labels;
+
                     String label = "";
                     int green = ContextCompat.getColor(m_context, R.color.colorGreen);
                     int skyBlue = ContextCompat.getColor(m_context, R.color.skyBlue);
@@ -148,6 +149,8 @@ public class StationActivity extends Activity {
                     TableLayout table = (TableLayout) findViewById(R.id.stationtable);
                     cleanStationTable(table);
                     ArrayList<String> labels;
+                    int colorWhite = ContextCompat.getColor(m_context, R.color.colorWhite);
+                    int colorGrey = ContextCompat.getColor(m_context, R.color.colorGrey);
 
                     labels = m_sess.getLabels(offset, count);
                     int labelCount = labels.size();
@@ -171,6 +174,7 @@ public class StationActivity extends Activity {
                     }
 
                     int numRows = m_sess.getNumberOfRows();
+                    int colorCount = 0;
                     for (int i = -1; i < numRows; i++) {
                         ArrayList<String> rowdata;
                         if (i == -1) {
@@ -216,6 +220,17 @@ public class StationActivity extends Activity {
                             if (i == -1) {
                                 b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
                                 b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
+                            } else if (i == 0 && j == 0) {
+                                b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorYellow));
+                                b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
+                            } else {
+                                if (colorCount % 2 == 0) {
+                                    b.setBackgroundColor(colorWhite);
+                                    b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
+                                } else {
+                                    b.setBackgroundColor(colorGrey);
+                                    b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
+                                }
                             }
 
                             parent.addView(iv);
@@ -226,6 +241,7 @@ public class StationActivity extends Activity {
                             tr.addView(parent);
                         }
                         table.addView(tr);
+                        colorCount++;
                     }
 
                     String status = m_sess.getOverallStatus();
