@@ -212,7 +212,7 @@ public class StationActivity extends Activity {
                             TextView b = new TextView(m_context);
 
                             b.setText(t);
-                            b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                            b.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
                             b.setTypeface(null, Typeface.BOLD);
                             b.setMaxLines(4);
                             b.setLines(4);
