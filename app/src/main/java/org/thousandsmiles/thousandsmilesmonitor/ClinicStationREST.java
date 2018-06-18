@@ -88,7 +88,7 @@ public class ClinicStationREST extends RESTful {
         }
     }
 
-    public class AuthJSONArrayRequest extends JsonArrayRequest{
+    public class AuthJSONArrayRequest extends JsonArrayRequest {
 
         public AuthJSONArrayRequest(String url, JSONArray jsonRequest,
                               Response.Listener<JSONArray> listener, ErrorListener errorListener) {
@@ -98,7 +98,6 @@ public class ClinicStationREST extends RESTful {
         public AuthJSONArrayRequest(String url, Response.Listener<JSONArray> listener,
                               Response.ErrorListener errorListener, String username, String password) {
             super(url, listener, errorListener);
-
         }
 
         private Map<String, String> headers = new HashMap<String, String>();
@@ -124,7 +123,7 @@ public class ClinicStationREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/clinicstation/%d/", getIP(), getPort(), clinicstationid);
+        String url = String.format("%s://%s:%s/tscharts/v1/clinicstation/%d/", getProtocol(), getIP(), getPort(), clinicstationid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
 

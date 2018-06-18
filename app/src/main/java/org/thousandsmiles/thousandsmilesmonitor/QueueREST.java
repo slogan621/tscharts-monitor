@@ -81,7 +81,8 @@ public class QueueREST extends RESTful {
         }
 
         @Override
-        public Map getHeaders() throws AuthFailureError {
+        public Map getHeaders() throws AuthFailureError
+        {
             Map headers = new HashMap();
             headers.put("Authorization", CommonSessionSingleton.getInstance().getToken());
             return headers;
@@ -98,7 +99,6 @@ public class QueueREST extends RESTful {
         public AuthJSONArrayRequest(String url, Response.Listener<JSONArray> listener,
                               Response.ErrorListener errorListener, String username, String password) {
             super(url, listener, errorListener);
-
         }
 
         private Map<String, String> headers = new HashMap<String, String>();
@@ -123,7 +123,7 @@ public class QueueREST extends RESTful {
 
         RequestQueue queue = volley.getQueue();
 
-        String url = String.format("http://%s:%s/tscharts/v1/queue/?clinic=%d", getIP(), getPort(), clinicid);
+        String url = String.format("%s://%s:%s/tscharts/v1/queue/?clinic=%d", getProtocol(), getIP(), getPort(), clinicid);
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
 
