@@ -21,6 +21,7 @@
     <string name="permission_rationale">Se requiere permisos  de los contactos para proveer Correo electrónico
     </string>
     <!-- Strings related to Settings -->
+    <string name="label_version">Versión</string>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
