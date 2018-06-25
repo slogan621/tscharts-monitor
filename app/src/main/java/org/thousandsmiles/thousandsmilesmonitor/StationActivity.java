@@ -402,7 +402,6 @@ public class StationActivity extends Activity {
                 }
                 if (status == 200) {
                     int pageColumnCount = m_sess.getPageColumnCount(page);
-                    offset = m_sess.getFirstQueueThisPage(page);
                     displayHeader(page, pageColumnCount);
                     displayPage(page, pageColumnCount);
                     displayOverallStatus();

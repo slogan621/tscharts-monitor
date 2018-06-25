@@ -116,11 +116,6 @@ public class SessionSingleton {
         return ret;
     }
 
-    public int getFirstQueueThisPage(int idx) {
-        int ret = m_monitorPages.get(idx).getFirstQueue();
-        return ret;
-    }
-
     public int getColumnsPerPage() {
         if (m_width == -1 && m_height == -1) {
             getScreenResolution(getContext());
