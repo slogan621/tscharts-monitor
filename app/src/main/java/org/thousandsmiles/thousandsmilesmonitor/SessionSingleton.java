@@ -44,9 +44,8 @@ public class SessionSingleton {
     private int m_width = -1;
     private String m_lang = "en_US";
     private static JSONObject m_queueStatusJSON;
+    private ArrayList<MonitorPage> m_monitorPages = new ArrayList<MonitorPage>();
     private static ArrayList<Integer> m_columnsPerQueue = new ArrayList<Integer>();
-    private static ArrayList<Integer> m_pageColumnCount = new ArrayList<Integer>();
-    private static ArrayList<Integer> m_firstQueueThisPage = new ArrayList<Integer>();
     private static HashMap<Integer, JSONObject> m_patientData = new HashMap<Integer, JSONObject>();
     private static HashMap<Integer, JSONObject> m_clinicStationData = new HashMap<Integer, JSONObject>();
     private CommonSessionSingleton m_commonSessionSingleton = null;
@@ -118,10 +117,7 @@ public class SessionSingleton {
     }
 
     public int getFirstQueueThisPage(int idx) {
-        int ret = 0;
-        if (idx >= 0 && idx < m_firstQueueThisPage.size()) {
-            ret = m_firstQueueThisPage.get(idx);
-        }
+        int ret = m_monitorPages.get(idx).getFirstQueue();
         return ret;
     }
 
@@ -153,14 +149,14 @@ public class SessionSingleton {
             getScreenResolution(getContext());
         }
 
-        m_maxColumnSize = m_height / 200;
+        m_maxColumnSize = (m_height / 200) + 1;
         return m_maxColumnSize;
     }
 
     public int getPageColumnCount(int page) {
         int ret = 0;
-        if (page >= 0 && page < m_pageColumnCount.size()) {
-            ret = m_pageColumnCount.get(page);
+        if (page >= 0 && page < m_monitorPages.size()) {
+            ret = m_monitorPages.get(page).columnCount();
         }
         return ret;
     }
@@ -192,38 +188,80 @@ public class SessionSingleton {
 
     public int getPageCount() {
         int count = 0;
-        int totalThisPage = 0;
-        int firstQueueThisPage = 0;
+        int queueCount = 0;
 
+        m_monitorPages.clear();
         m_columnsPerQueue = new ArrayList<Integer>();
-        m_pageColumnCount = new ArrayList<Integer>();
-        m_firstQueueThisPage = new ArrayList<Integer>();
         int maxColumnSize = getMaxColumnSize();
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            //m_firstQueueThisPage.add(0);      // page 0 always starts with queue 0
+
+            MonitorPage monPage = new MonitorPage();
+            monPage.setFirstQueue(0);
+            m_monitorPages.add(monPage);
+            count = 1;
+            int columnsPerPage = getColumnsPerPage();
+            int j = 0;
+
             for (int i = 0; i < r.length(); i++) {
-                int queueCount;
+                int columnCount;
+
                 JSONObject o = r.getJSONObject(i);
                 JSONArray entries = o.getJSONArray("entries");
                 int n = entries.length();
-                queueCount = n / maxColumnSize;
-                if (queueCount == 0) {
-                    queueCount = 1;
+                boolean en_US = false;
+                if (getLanguage().equals("en_US")) {
+                    en_US = true;
                 }
-                else if (n % maxColumnSize > 0) {
-                    queueCount += 1;
-                }
-                m_columnsPerQueue.add(queueCount);
-                if (i == 0 || i == r.length() - 1 || queueCount + totalThisPage >= getColumnsPerPage() - 1) {
-                    count++;
-                    totalThisPage = queueCount;    // start counting for next page
-                    m_pageColumnCount.add(totalThisPage);
-                    firstQueueThisPage = i;
-                    m_firstQueueThisPage.add(firstQueueThisPage);
+                String stationName;
+
+                if (en_US == true) {
+                    stationName = o.getString("name");
                 } else {
-                    totalThisPage += queueCount;
-                    count++;
+                    stationName = o.getString("name_es");
+                }
+                columnCount = n / maxColumnSize;
+                if (n % maxColumnSize != 0) {
+                    columnCount++;
+                }
+                int colNumber = 0;
+                int offset = 0;
+                if (columnCount == 0) {
+                    columnCount = 1;     // always display a column, even if no entries in the queue
+                }
+
+                m_columnsPerQueue.add(columnCount);
+                while (columnCount > 0) {
+                    String header;
+                    PageColumn column = new PageColumn();
+                    if (colNumber == 0) {
+                        header = stationName;
+                        column.setOverflow(false);
+                    } else {
+                        header = String.format("%s (%d)", stationName, colNumber + 1);
+                        column.setOverflow(true);
+                    }
+                    colNumber++;
+
+                    column.setQueue(i);
+                    column.setHeader(header);
+                    if (columnCount > 1) {
+                        column.setOffset(offset);
+                        offset += maxColumnSize;
+                    } else {
+                        column.setOffset(offset);
+                    }
+                    j++;
+                    monPage.addColumn(column);
+                    columnCount--;
+
+                    if (j == columnsPerPage && (columnCount > 0 || i < (r.length() - 1)))  {
+                        monPage = new MonitorPage();
+                        monPage.setFirstQueue(i + 1);
+                        m_monitorPages.add(monPage);
+                        j = 0;
+                        count++;
+                    }
                 }
             }
         }
@@ -238,51 +276,15 @@ public class SessionSingleton {
         m_commonSessionSingleton.setClinicId(id);
     }
 
-    public ArrayList<String> getLabels(int offset, int count) {
+    public ArrayList<String> getLabels(int page, int count) {
         ArrayList<String> labels = new ArrayList<String>();
-        try {
-            JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            boolean en_US = false;
-            if (getLanguage().equals("en_US")) {
-                en_US = true;
-            }
-            int queue = offset;
-            while (count > 0)
-            {
-                if (queue < r.length()) {
-                    String label = "";
-                    try {
-                        JSONObject o = r.getJSONObject(queue);
-                        if (en_US) {
-                            label = o.getString("name");
-                            labels.add(label);
-                        } else {
-                            label = o.getString("name_es");
-                            labels.add(label);
-                        }
-                        count--;
-                    } catch (org.json.JSONException e) {
-                        labels.add("");
-                        count--;
-                    }
 
-                    int columnsInQueue = m_columnsPerQueue.get(queue);
-                    int i = 1;
-                    while (i < columnsInQueue) {
-                        labels.add(String.format("%s (%d)", label, i + 1));
-                        count--;
-                        i++;
-                    }
-                } else {
-                    labels.add("");
-                    count--;
-                }
-                queue++;
-            }
-        }
-        catch (org.json.JSONException e) {
-        }
-        return labels;
+      MonitorPage p = m_monitorPages.get(page);
+      for (int j = 0; j < count; j++) {
+          PageColumn c = p.getColumn(j);
+          labels.add(c.getHeader());
+      }
+      return labels;
     }
 
     public void addPatientData(JSONObject data) {
@@ -442,75 +444,69 @@ public class SessionSingleton {
     }
 
     //{"name":"Dental1","level":1,"away":true,"awaytime":30,"clinic":1,"station":1,"active":false,"willreturn":"2017-07-28T04:49:14","id":1}
-    public ArrayList<QueueHeader> getStationHeaders(int offset, int count) {
+    public ArrayList<QueueHeader> getStationHeaders(int page, int count) {
         ArrayList<QueueHeader> queueHeader = new ArrayList<QueueHeader>();
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            int i = offset;
-            while (i < offset + getColumnsPerPage() && count > 0) {
-                try {
-                    JSONObject o = r.getJSONObject(i);
-                    String avgServiceTime = o.getString("avgservicetime");
-                    QueueHeader rowHeader = new QueueHeader();
-                    Date d;
 
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-                    int csid = o.getInt("clinicstation");
-                    JSONObject clinicStation = getClinicStationData(csid);
-
-                    rowHeader.setServiceTime(avgServiceTime);
-
-                    String willret = clinicStation.getString("willreturn");
-
+            MonitorPage p = m_monitorPages.get(page);
+            for (int i = 0; i < p.columnCount(); i++) {
+                QueueHeader rowHeader = new QueueHeader();
+                PageColumn column = p.getColumn(i);
+                int queue = column.getQueue();
+                if (column.getOverflow() == true) {
+                    rowHeader.setStub(true);
+                } else {
                     try {
-                        d = df.parse(willret);
-                        SimpleDateFormat dflocal = new SimpleDateFormat("hh:mm:ss a");
-                        dflocal.setTimeZone(TimeZone.getDefault());
-                        willret = dflocal.format(d);
-                    } catch (ParseException e) {
-                        continue;
-                    }
+                        JSONObject o = r.getJSONObject(queue);
+                        String avgServiceTime = o.getString("avgservicetime");
+                        Date d;
 
-                    try {
-                        if (clinicStation.getBoolean("away") == true) {
-                            rowHeader.setState(QueueHeader.State.AWAY);
-                            rowHeader.setWillReturnTime(willret);
-                        } else if (clinicStation.getBoolean("active") == true) {
-                            rowHeader.setState(QueueHeader.State.ACTIVE);
-                            int activePatient = clinicStation.getInt("activepatient");
-                            rowHeader.setActivePatient(activePatient);
-                        } else {
-                            rowHeader.setState(QueueHeader.State.WAITING);
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                        int csid = o.getInt("clinicstation");
+                        JSONObject clinicStation = getClinicStationData(csid);
+
+                        rowHeader.setServiceTime(avgServiceTime);
+
+                        String willret = clinicStation.getString("willreturn");
+
+                        try {
+                            d = df.parse(willret);
+                            SimpleDateFormat dflocal = new SimpleDateFormat("hh:mm:ss a");
+                            dflocal.setTimeZone(TimeZone.getDefault());
+                            willret = dflocal.format(d);
+                        } catch (ParseException e) {
+                            continue;
+                        }
+
+                        try {
+                            if (clinicStation.getBoolean("away") == true) {
+                                rowHeader.setState(QueueHeader.State.AWAY);
+                                rowHeader.setWillReturnTime(willret);
+                            } else if (clinicStation.getBoolean("active") == true) {
+                                rowHeader.setState(QueueHeader.State.ACTIVE);
+                                int activePatient = clinicStation.getInt("activepatient");
+                                rowHeader.setActivePatient(activePatient);
+                            } else {
+                                rowHeader.setState(QueueHeader.State.WAITING);
+                            }
+                        } catch (JSONException e) {
+                            continue;
                         }
                     } catch (JSONException e) {
-                        continue;
                     }
-
-                    queueHeader.add(rowHeader);
-                    count--;
-
-                    if (m_columnsPerQueue.get(i) > 1) {
-                        QueueHeader stubHeader = new QueueHeader();
-                        stubHeader.setStub(true);                // display header as blanks
-                        for (int j = 0; j < m_columnsPerQueue.get(i) - 1; j++) {
-                            queueHeader.add(stubHeader);
-                            count--;
-                        }
-                    }
-                } catch (JSONException e) {
-                   continue;
                 }
-                i++;
+                queueHeader.add(rowHeader);
             }
-        }
-        catch (org.json.JSONException e) {
+        } catch(JSONException e){
+            e.printStackTrace();
         }
         return queueHeader;
-    }
+        }
 
-    private String patientToString(int patient, JSONObject p) {
+        private String patientToString(int patient, JSONObject p) {
         String dob;
         String gender;
         String ret;
@@ -557,19 +553,25 @@ public class SessionSingleton {
         return ret;
     }
 
-    public ArrayList<String> getRow(int offset, int row, int count) {
-        ArrayList<String> rowdata = new ArrayList<String>();
-        int maxColumnSize = getMaxColumnSize();
+    public ArrayList<RowData> getRow(int page, int row, int count) {
+        ArrayList<RowData> rowdata = new ArrayList<RowData>();
 
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            int i = offset;
-            do {
+            MonitorPage mp = m_monitorPages.get(page);
+            int aCount = count;
+            int i = 0;
+
+            while (aCount > 0) {
+                PageColumn pc = mp.getColumn(i);
+                int offset = pc.getOffset();
+                RowData rd = new RowData();
+
                 try {
-                    JSONObject o = r.getJSONObject(i);
+                    JSONObject o = r.getJSONObject(pc.getQueue());
                     JSONArray entries = o.getJSONArray("entries");
-                    int patient = entries.getJSONObject(row).getInt("patient");
-                    String waitTime = entries.getJSONObject(row).getString("waittime");
+                    int patient = entries.getJSONObject(row + offset).getInt("patient");
+                    String waitTime = entries.getJSONObject(row + offset).getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = patientToString(patient, p);
                     String waiting;
@@ -581,53 +583,51 @@ public class SessionSingleton {
                     }
 
                     patientString += String.format("%s: %s\n", waiting, waitTime);
-
-                    rowdata.add(patientString);
-                    count--;
-
-                    if (m_columnsPerQueue.get(i) > 1) {
-                        int columnOffset = maxColumnSize;
-                        for (int j = 0; j < m_columnsPerQueue.get(i) - 1; j++) {
-                            // XXX obviously will need to push something different but for now...
-                            patient = entries.getJSONObject(row + columnOffset).getInt("patient");
-                            waitTime = entries.getJSONObject(row + columnOffset).getString("waittime");
-                            p = getPatientData(patient);
-                            patientString = patientToString(patient, p);
-
-                            if (m_lang.equals("en_US")) {
-                                waiting = String.format(getContext().getResources().getString(R.string.waiting_time));
-                            } else {
-                                waiting = String.format(getContext().getResources().getString(R.string.waiting_time_es));
-                            }
-
-                            patientString += String.format("%s: %s\n", waiting, waitTime);
-
-                            rowdata.add(patientString);
-                            columnOffset += maxColumnSize;
-                            count--;
-                        }
+                    rd.setRowdata(patientString);
+                    if (offset == 0 && row == 0) {
+                        rd.setWaitingItem(true);
+                    } else {
+                        rd.setWaitingItem(false);
                     }
-                } catch (org.json.JSONException e) {
-                    rowdata.add("");
-                    count--;
+                    rowdata.add(rd);
+
+                } catch(JSONException e) {
+                    rd.setRowdata("");
+                    rd.setWaitingItem(false);
+                    rowdata.add(rd);
                 }
-                i = i + 1;
-            } while(count > 0);
+                aCount--;
+                i++;
+            }
+        } catch(JSONException e) {
         }
-        catch (org.json.JSONException e) {
-        }
+
         return rowdata;
     }
 
-    public ArrayList<String> getActiveRow(int offset, int count) {
-        ArrayList<String> rowdata = new ArrayList<String>();
+    public ArrayList<RowData> getActiveRow(int page, int count) {
+        ArrayList<RowData> rowdata = new ArrayList<RowData>();
+
+        MonitorPage mp = m_monitorPages.get(page);
+        JSONArray r;
         try {
-            JSONArray r = m_queueStatusJSON.getJSONArray("queues");
-            int i = offset;
-            while (count > 0)
-            {
+            r = m_queueStatusJSON.getJSONArray("queues");
+        } catch (JSONException e) {
+            return rowdata;
+        }
+
+        for (int i = 0; i < mp.columnCount(); i++) {
+            PageColumn pc = mp.getColumn(i);
+            RowData rd = new RowData();
+            rd.setWaitingItem(false);
+
+            if (pc.getOverflow() == true) {
+                rd.setRowdata("");
+                rowdata.add(rd);
+            } else {
+                int queue = pc.getQueue();
                 try {
-                    JSONObject o = r.getJSONObject(i);
+                    JSONObject o = r.getJSONObject(queue);
                     String patientString;
                     if (o != null) {
                         int clinicstation = o.getInt("clinicstation");
@@ -654,24 +654,13 @@ public class SessionSingleton {
                     } else {
                         patientString = "";
                     }
-
-                    rowdata.add(patientString);
-
+                    rd.setRowdata(patientString);
+                    rowdata.add(rd);
+                } catch (JSONException e) {
+                    rowdata.clear();
+                    return rowdata;
                 }
-                catch(org.json.JSONException e) {
-                    rowdata.add("");
-                }
-
-                if (m_columnsPerQueue.get(i) > 1) {
-                    for (int j = 1; j < m_columnsPerQueue.get(i) && count > 0; j++, count--) {
-                        rowdata.add("");
-                    }
-                }
-                i++;
-                count--;
             }
-        }
-        catch (org.json.JSONException e) {
         }
         return rowdata;
     }

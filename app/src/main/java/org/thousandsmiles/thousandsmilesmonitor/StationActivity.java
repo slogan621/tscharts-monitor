@@ -24,9 +24,11 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +50,39 @@ public class StationActivity extends Activity {
     private static final int TIME_OUT = 15000;
     Context context;
     GetAndDisplayTask m_task = null;
+
+    /*
+    private String DEBUG_TAG = "swipe";
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch(action) {
+            case (MotionEvent.ACTION_DOWN) :
+                Log.d(DEBUG_TAG,"Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE) :
+                Log.d(DEBUG_TAG,"Action was MOVE");
+                m_task.cancel(true);
+                return true;
+            case (MotionEvent.ACTION_UP) :
+                Log.d(DEBUG_TAG,"Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL) :
+                Log.d(DEBUG_TAG,"Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE) :
+                Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+            default :
+                return super.onTouchEvent(event);
+        }
+    }
+
+    */
 
     private class GetAndDisplayTask extends AsyncTask<String, Integer, String> {
 
@@ -138,11 +173,14 @@ public class StationActivity extends Activity {
             });
         }
 
-        private void displayPage(final int offset, final int count)
+        private void displayPage(final int page, final int count)
         {
             m_sess.setContext(m_context);
+
             StationActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
+                    HideyHelper hh = new HideyHelper();
+                    hh.toggleHideyBar(StationActivity.this);
                     TextView text = (TextView) findViewById(R.id.clinicdatetime);
                     text.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date()));
 
@@ -152,7 +190,7 @@ public class StationActivity extends Activity {
                     int colorWhite = ContextCompat.getColor(m_context, R.color.colorWhite);
                     int colorGrey = ContextCompat.getColor(m_context, R.color.colorGrey);
 
-                    labels = m_sess.getLabels(offset, count);
+                    labels = m_sess.getLabels(page, count);
                     int labelCount = labels.size();
 
                     TableRow trow = (TableRow) findViewById(R.id.stationlabels);
@@ -176,11 +214,11 @@ public class StationActivity extends Activity {
                     int numRows = m_sess.getNumberOfRows();
                     int colorCount = 0;
                     for (int i = -1; i < numRows; i++) {
-                        ArrayList<String> rowdata;
+                        ArrayList<RowData> rowdata;
                         if (i == -1) {
-                            rowdata = m_sess.getActiveRow(offset, count);
+                            rowdata = m_sess.getActiveRow(page, count);
                         } else {
-                            rowdata = m_sess.getRow(offset, i, count);
+                            rowdata = m_sess.getRow(page, i, count);
                         }
 
                         TableRow tr = new TableRow(m_context);
@@ -198,7 +236,7 @@ public class StationActivity extends Activity {
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
                             iv.setLayoutParams(layoutParams);
 
-                            String t = rowdata.get(j);
+                            String t = rowdata.get(j).getRowdata();
                             if (t.equals("") == false) {
                                 if (t.indexOf("Male") >= 0 || t.indexOf("Mascul") >= 0) {
                                     //iv.setImageResource(R.drawable.imageboywhitehalf);
@@ -217,19 +255,16 @@ public class StationActivity extends Activity {
                             b.setMaxLines(4);
                             b.setLines(4);
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
+                            b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
                             if (i == -1) {
                                 b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
-                                b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
-                            } else if (i == 0 && j == 0) {
+                            } else if (rowdata.get(j).isWaitingItem()) {
                                 b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorYellow));
-                                b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
                             } else {
                                 if (colorCount % 2 == 0) {
                                     b.setBackgroundColor(colorWhite);
-                                    b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
                                 } else {
                                     b.setBackgroundColor(colorGrey);
-                                    b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
                                 }
                             }
 
@@ -247,6 +282,7 @@ public class StationActivity extends Activity {
                     String status = m_sess.getOverallStatus();
                     text = (TextView) findViewById(R.id.clinicstatus);
                     text.setText(status);
+                    text.setTextColor(ContextCompat.getColor(m_context, R.color.colorWhite));
 
                     text = (TextView) findViewById(R.id.title);
                     String title;
@@ -365,11 +401,10 @@ public class StationActivity extends Activity {
                     }
                 }
                 if (status == 200) {
-
                     int pageColumnCount = m_sess.getPageColumnCount(page);
                     offset = m_sess.getFirstQueueThisPage(page);
-                    displayHeader(offset, pageColumnCount);
-                    displayPage(offset, pageColumnCount);
+                    displayHeader(page, pageColumnCount);
+                    displayPage(page, pageColumnCount);
                     displayOverallStatus();
 
                     try {
