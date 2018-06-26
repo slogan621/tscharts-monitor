@@ -24,9 +24,11 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -48,41 +50,35 @@ import java.util.TimeZone;
 
 public class StationActivity extends Activity {
     private static final int TIME_OUT = 15000;
-    Context context;
     GetAndDisplayTask m_task = null;
+    Context m_context;
+    boolean m_swiped = false;
+    private GestureDetectorCompat m_detector;
 
-    /*
-    private String DEBUG_TAG = "swipe";
+    class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
 
-        int action = MotionEventCompat.getActionMasked(event);
-
-        switch(action) {
-            case (MotionEvent.ACTION_DOWN) :
-                Log.d(DEBUG_TAG,"Action was DOWN");
-                return true;
-            case (MotionEvent.ACTION_MOVE) :
-                Log.d(DEBUG_TAG,"Action was MOVE");
-                m_task.cancel(true);
-                return true;
-            case (MotionEvent.ACTION_UP) :
-                Log.d(DEBUG_TAG,"Action was UP");
-                return true;
-            case (MotionEvent.ACTION_CANCEL) :
-                Log.d(DEBUG_TAG,"Action was CANCEL");
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE) :
-                Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
-                        "of current screen element");
-                return true;
-            default :
-                return super.onTouchEvent(event);
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            //Log.d(DEBUG_TAG, "onFling: " + event1.toString() + event2.toString());
+            if (velocityX > 0 && velocityX > velocityY) {
+                m_swiped = true;
+            }
+            return true;
         }
     }
 
-    */
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.m_detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
 
     private class GetAndDisplayTask extends AsyncTask<String, Integer, String> {
 
@@ -299,7 +295,7 @@ public class StationActivity extends Activity {
 
         public void setContext(Context c)
         {
-            m_context = context;
+            m_context = c;
         }
 
         // Runs in UI before background thread is called
@@ -406,11 +402,15 @@ public class StationActivity extends Activity {
                     displayPage(page, pageColumnCount);
                     displayOverallStatus();
 
-                    try {
-                        Thread.sleep(20000);
-                    } catch(InterruptedException e) {
+                    long ticks = 20000;
+                    while (ticks > 0 && m_swiped == false) {
+                        try {
+                            Thread.sleep(500);
+                            ticks -= 500;
+                        } catch (InterruptedException e) {
+                        }
                     }
-
+                    m_swiped = false;
                     page++;
                     if (page == numPages) {
                         m_sess.clearPatientData();
@@ -455,7 +455,7 @@ public class StationActivity extends Activity {
         HideyHelper h = new HideyHelper();
         h.toggleHideyBar(this);
 
-        final ClinicREST clinicREST = new ClinicREST(context);
+        final ClinicREST clinicREST = new ClinicREST(m_context);
 
         final Object lock;
 
@@ -529,7 +529,8 @@ public class StationActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_station_status);
-        context = this.getApplicationContext();
+        m_context = this.getApplicationContext();
+        m_detector = new GestureDetectorCompat(this, new GestureListener());
     }
 
     @Override
