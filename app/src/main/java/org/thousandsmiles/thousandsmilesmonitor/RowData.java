@@ -17,9 +17,88 @@ package org.thousandsmiles.thousandsmilesmonitor;
  * limitations under the License.
  */
 
-public class RowData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RowData implements Parcelable {
     private String m_rowdata;
     private boolean m_isWaitingItem;
+    private int m_clinicstation;
+    private int m_queue;
+    private int m_patientid;
+    private int m_routineslipentry;
+
+    public int getClinicstation() {
+        return m_clinicstation;
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.m_rowdata);
+        dest.writeInt(this.m_clinicstation);
+        dest.writeInt(this.m_queue);
+        dest.writeInt(m_patientid);
+        dest.writeInt(m_routineslipentry);
+    }
+
+    public static final Parcelable.Creator<RowData> CREATOR
+            = new Parcelable.Creator<RowData>() {
+        public RowData createFromParcel(Parcel in) {
+            return new RowData(in);
+        }
+
+        public RowData[] newArray(int size) {
+            return new RowData[size];
+        }
+    };
+
+    public RowData() {
+        m_routineslipentry = 0;
+        m_patientid = 0;
+        m_queue = 0;
+        m_clinicstation = 0;
+        m_rowdata = "";
+    }
+
+    private RowData(Parcel in) {
+        m_routineslipentry = in.readInt();
+        m_patientid = in.readInt();
+        m_queue = in.readInt();
+        m_clinicstation = in.readInt();
+        m_rowdata = in.readString();
+    }
+
+    public void setClinicstation(int clinicstation) {
+        m_clinicstation = clinicstation;
+    }
+
+    public int getQueue() {
+        return m_queue;
+    }
+
+    public void setQueue(int queue) {
+        m_queue = queue;
+    }
+
+    public int getPatientid() {
+        return m_patientid;
+    }
+
+    public void setPatientid(int patientid) {
+        m_patientid = patientid;
+    }
+
+    public int getRoutineslipentry() {
+        return m_routineslipentry;
+    }
+
+    public void setRoutineslipentry(int routineslipentry) {
+        m_routineslipentry = routineslipentry;
+    }
 
     public String getRowdata() {
         return m_rowdata;

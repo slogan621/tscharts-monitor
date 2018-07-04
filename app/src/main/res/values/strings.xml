@@ -39,6 +39,11 @@
     <string name="dob">DOB</string>
     <string name="dob_es">Fec. Nac.</string>
 
+    <string name="title_delete_queue_dialog">Delete Patient from Queue</string>
+    <string name="delete_yes">Delete</string>
+    <string name="delete_cancel">Cancel</string>
+    <string name="msg_delete">Delete</string>
+    <string name="msg_remove_from_queue">"Remove patient %d from this queue?"</string>
 
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>
@@ -72,5 +77,7 @@
 
     <string name="clinicstationstatus">Clinic Station Status</string>
     <string name="clinicstationstatus_es">Estados</string>
+    <string name="msg_patient_successfully_removed">Patient successfully removed from queue</string>
+    <string name="msg_patient_unsuccessfully_removed">Patient failed to be removed from the queue</string>
 
-    </resources>
+</resources>

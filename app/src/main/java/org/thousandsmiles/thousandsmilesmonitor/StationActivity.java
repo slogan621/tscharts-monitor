@@ -25,12 +25,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +49,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class StationActivity extends Activity {
+import static java.lang.Math.abs;
+
+public class StationActivity extends AppCompatActivity {
     private static final int TIME_OUT = 15000;
     GetAndDisplayTask m_task = null;
     Context m_context;
@@ -67,7 +70,12 @@ public class StationActivity extends Activity {
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY) {
             //Log.d(DEBUG_TAG, "onFling: " + event1.toString() + event2.toString());
-            if (velocityX > 0 && velocityX > velocityY) {
+            /*
+             * XXX in some cases, veloxityX is neg and in some, pos, could be due to
+             *  tablet orientation. Needs to be investigated. But for now, any swipe that
+             * is along the x axis will trigger the swipe
+             */
+            if (abs((int)velocityX) > abs((int)velocityY)) {
                 m_swiped = true;
             }
             return true;
@@ -232,7 +240,8 @@ public class StationActivity extends Activity {
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
                             iv.setLayoutParams(layoutParams);
 
-                            String t = rowdata.get(j).getRowdata();
+                            RowData rd = rowdata.get(j);
+                            String t = rd.getRowdata();
                             if (t.equals("") == false) {
                                 if (t.indexOf("Male") >= 0 || t.indexOf("Mascul") >= 0) {
                                     //iv.setImageResource(R.drawable.imageboywhitehalf);
@@ -244,6 +253,15 @@ public class StationActivity extends Activity {
                             }
 
                             TextView b = new TextView(m_context);
+                            b.setTag(rd);
+                            b.setOnClickListener(new View.OnClickListener()
+                            {
+                                public void onClick(View v)
+                                {
+                                    RowData rdTag = (RowData) v.getTag();
+                                    showDeleteDialog(rdTag);
+                                }
+                            });
 
                             b.setText(t);
                             b.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -291,7 +309,6 @@ public class StationActivity extends Activity {
                 }
             });
         }
-
 
         public void setContext(Context c)
         {
@@ -542,6 +559,15 @@ public class StationActivity extends Activity {
         moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
+    }
+
+    void showDeleteDialog(RowData rd)
+    {
+        DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(null, rd);
+        rtc.setArguments(args);
+        rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
     }
 }
 

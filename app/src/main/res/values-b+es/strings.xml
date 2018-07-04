@@ -36,6 +36,12 @@
     <string name="dob">DOB</string>
     <string name="dob_es">Fec. Nac.</string>
 
+    <string name="title_delete_queue_dialog">Retirar un Paciente de la Línea</string>
+    <string name="delete_yes">Retirar</string>
+    <string name="delete_cancel">Cancelar</string>
+    <string name="msg_delete">Retirar</string>
+    <string name="msg_remove_from_queue">"¿Retire al paciente %d de la línea?"</string>
+
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>
 
@@ -68,5 +74,7 @@
 
     <string name="clinicstationstatus">Clinic Station Status</string>
     <string name="clinicstationstatus_es">Estados</string>
+    <string name="msg_patient_successfully_removed">Paciente eliminado con éxito de la línea</string>
+    <string name="msg_patient_unsuccessfully_removed">Paciente no pudo ser eliminado de la línea</string>
 
 </resources>

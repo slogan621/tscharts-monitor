@@ -144,7 +144,7 @@ public class SessionSingleton {
             getScreenResolution(getContext());
         }
 
-        m_maxColumnSize = (m_height / 200) + 1;
+        m_maxColumnSize = (m_height / 200);
         return m_maxColumnSize;
     }
 
@@ -564,9 +564,12 @@ public class SessionSingleton {
 
                 try {
                     JSONObject o = r.getJSONObject(pc.getQueue());
-                    JSONArray entries = o.getJSONArray("entries");
-                    int patient = entries.getJSONObject(row + offset).getInt("patient");
-                    String waitTime = entries.getJSONObject(row + offset).getString("waittime");
+                    rd.setQueue(pc.getQueue());
+                    JSONObject entry = o.getJSONArray("entries").getJSONObject(row + offset);
+                    int patient = entry.getInt("patient");
+                    rd.setPatientid(patient);
+                    rd.setRoutineslipentry(entry.getInt("routingslipentry"));
+                    String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = patientToString(patient, p);
                     String waiting;
@@ -621,18 +624,21 @@ public class SessionSingleton {
                 rowdata.add(rd);
             } else {
                 int queue = pc.getQueue();
+                rd.setQueue(queue);
                 try {
                     JSONObject o = r.getJSONObject(queue);
                     String patientString;
                     if (o != null) {
                         int clinicstation = o.getInt("clinicstation");
                         JSONObject c = getClinicStationData(clinicstation);
+                        rd.setClinicstation(clinicstation);
 
                         if (c != null) {
 
                             if (c.getBoolean("active") == true) {
 
                                 int activePatient = c.getInt("activepatient");
+                                rd.setPatientid(activePatient);
                                 JSONObject p = getPatientData(activePatient);
 
                                 if (p != null) {
