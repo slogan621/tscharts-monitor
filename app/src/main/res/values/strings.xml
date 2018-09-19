@@ -75,8 +75,8 @@
     <string name="avgservicetime">Avg Service Time</string>
     <string name="avgservicetime_es">Tiempo Promedio de Servicio</string>
 
-    <string name="clinicstationstatus">Clinic Station Status</string>
-    <string name="clinicstationstatus_es">Estados</string>
+    <string name="clinicstationstatus">Clinic Status</string>
+    <string name="clinicstationstatus_es">Estado de la clínica</string>
     <string name="msg_patient_successfully_removed">Patient successfully removed from queue</string>
     <string name="msg_patient_unsuccessfully_removed">Patient failed to be removed from the queue</string>
 
