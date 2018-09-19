@@ -63,6 +63,7 @@ public class DeleteFromQueueTask extends AsyncTask<Object, Object, Object> {
 
             m_activity.runOnUiThread(new Runnable() {
                 public void run() {
+                    ((StationActivity)m_activity).setRefresh();
                     Toast.makeText(m_activity, m_activity.getString(R.string.msg_patient_successfully_removed), Toast.LENGTH_SHORT).show();
                 }
             });

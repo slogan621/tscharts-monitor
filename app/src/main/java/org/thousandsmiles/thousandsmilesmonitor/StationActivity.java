@@ -56,7 +56,13 @@ public class StationActivity extends AppCompatActivity {
     GetAndDisplayTask m_task = null;
     Context m_context;
     boolean m_swiped = false;
+    boolean m_refresh = false;
     private GestureDetectorCompat m_detector;
+
+    public void setRefresh()
+    {
+        m_refresh = true;
+    }
 
     class GestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final String DEBUG_TAG = "Gestures";
@@ -334,14 +340,14 @@ public class StationActivity extends AppCompatActivity {
             int numPages = 0;
             int page = 0;
 
-
             while (true) {
                 if (isCancelled()) {
                     Log.i("doInBackground", "task is cancelled, leaving");
                     break;
                 }
                 Log.i("Station Activity", "Top of Loop");
-                if (page == 0) {
+                if (page == 0 || m_refresh == true) {
+                    m_refresh = false;
                     QueueREST queueData = new QueueREST(m_context);
                     lock = queueData.getQueueData(sess.getClinicId());
                     synchronized (lock) {
@@ -420,23 +426,27 @@ public class StationActivity extends AppCompatActivity {
                     displayOverallStatus();
 
                     long ticks = 20000;
-                    while (ticks > 0 && m_swiped == false) {
+                    while (ticks > 0 && m_swiped == false && m_refresh == false) {
                         try {
                             Thread.sleep(500);
                             ticks -= 500;
                         } catch (InterruptedException e) {
                         }
                     }
+                    if (m_refresh == false) {
+                        page++;
+                    }
                     m_swiped = false;
-                    page++;
-                    if (page == numPages) {
+                    if (page == numPages || m_refresh == true) {
                         m_sess.clearPatientData();
-                        page = 0;
-                        String lang = m_sess.getLanguage();
-                        if (lang.equals("en_US")) {
-                            m_sess.setLanguage("es_US");
-                        } else {
-                            m_sess.setLanguage("en_US");
+                        if (m_refresh == false) {
+                            page = 0;
+                            String lang = m_sess.getLanguage();
+                            if (lang.equals("en_US")) {
+                                m_sess.setLanguage("es_US");
+                            } else {
+                                m_sess.setLanguage("en_US");
+                            }
                         }
                     }
                 } else {
