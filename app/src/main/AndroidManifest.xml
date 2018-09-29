@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name_full">
         </activity>
         <activity
             android:name=".StationActivity"
@@ -23,7 +23,7 @@
         </activity>
         <activity
             android:name=".SplashActivity"
-            android:label="1000 Smiles\nClinic Monitor">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
