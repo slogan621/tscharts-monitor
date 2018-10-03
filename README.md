@@ -11,6 +11,8 @@ TV monitors that are positioned in our clinic.
 See https://github.com/slogan621/tscharts for the backend to which this
 application interfaces.
 
+https://www.youtube.com/playlist?list=PLPoa7kXBiFDVmroxIjCOmvcHhGIjsZUCJ is a YouTube channel devoted to the use of the Thousand Smiles EMR.
+
 # License
 
 ```
