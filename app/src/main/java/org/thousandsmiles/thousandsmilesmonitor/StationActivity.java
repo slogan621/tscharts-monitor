@@ -49,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static android.view.View.VISIBLE;
 import static java.lang.Math.abs;
 
 public class StationActivity extends AppCompatActivity {
@@ -119,6 +120,92 @@ public class StationActivity extends AppCompatActivity {
 
                 // Remove all rows except the headers and other static rows near the top
                 if (childCount > 4) {
+
+                    /* before we remove rows, calculate some sizes */
+
+                    /* XXX this is ugly, but needed for the way we layout things */
+
+                    TableRow row = (TableRow) table.getChildAt(4);
+                    if (row != null && row.getVisibility() == VISIBLE)
+                    {
+                        m_sess.setPatientRowHeight(row.getMeasuredHeight());
+                        for (int count = 0; count < row.getChildCount(); count++) {
+                            View cv = row.getChildAt(count);
+
+                            if (cv != null && cv.getVisibility() == VISIBLE) {
+                                if (cv instanceof LinearLayout) {
+
+                                    int widthAcc = 0;
+                                    ViewGroup vg = (ViewGroup) cv;
+                                    boolean sawImage = false;
+                                    boolean sawText = false;
+                                    for (int i = 0; vg != null && i < vg.getChildCount(); i++) {
+                                        View inner = vg.getChildAt(i);
+                                        if (inner != null && inner instanceof TextView) {
+                                            int w = 0;
+                                            w = inner.getWidth();
+                                            if (w != 0) {
+                                                sawText = true;
+                                                widthAcc += inner.getWidth();
+                                            }
+                                        } else if (inner != null && inner instanceof ImageView) {
+                                            int w = 0;
+                                            w = inner.getWidth();
+                                            if (w != 0) {
+                                                sawImage = true;
+                                                widthAcc += inner.getWidth();
+                                            }
+                                        }
+                                    }
+                                    if (sawImage == true && sawText == true && widthAcc != 0) {
+                                        m_sess.setPatientColumnWidth(widthAcc);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    int hAcc = 0;
+
+                    View v = findViewById(R.id.statusLinearLayout);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getPaddingBottom();
+                        hAcc += v.getPaddingTop();
+                    }
+
+                    v = findViewById(R.id.tableLayout1);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    v = findViewById(R.id.stationlabels);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    v = findViewById(R.id.lineRow2);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    v = findViewById(R.id.lineRow);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    v = findViewById(R.id.stationheaders);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    v = findViewById(R.id.clinicstatus);
+                    if (v != null && v.getVisibility() == VISIBLE) {
+                        hAcc += v.getMeasuredHeight();
+                    }
+
+                    m_sess.setHeaderHeight(hAcc + 100);  // XXX 100 is a fudge, need to figure out why it is needed
+
                     table.removeViews(4, childCount - 4);
                 }
             }
@@ -237,7 +324,7 @@ public class StationActivity extends AppCompatActivity {
                             
                             LinearLayout parent = new LinearLayout(m_context);
 
-                            parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
                             parent.setOrientation(LinearLayout.HORIZONTAL);
                             parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
@@ -422,8 +509,8 @@ public class StationActivity extends AppCompatActivity {
                 if (status == 200) {
                     int pageColumnCount = m_sess.getPageColumnCount(page);
                     displayHeader(page, pageColumnCount);
-                    displayPage(page, pageColumnCount);
                     displayOverallStatus();
+                    displayPage(page, pageColumnCount);
 
                     long ticks = 20000;
                     while (ticks > 0 && m_swiped == false && m_refresh == false) {

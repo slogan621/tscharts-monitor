@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.json.JSONArray;
@@ -36,12 +37,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
+
 public class SessionSingleton {
     private static SessionSingleton m_instance;
     private int m_columnsPerPage = 5;
     private int m_maxColumnSize = 6;
     private int m_height = -1;
     private int m_width = -1;
+    private int m_patientRowHeight = 300;
+    private int m_patientColumnWidth = 400;
+    private int m_headerHeight = 0;
+    private float m_density;
     private String m_lang = "en_US";
     private static JSONObject m_queueStatusJSON;
     private ArrayList<MonitorPage> m_monitorPages = new ArrayList<MonitorPage>();
@@ -120,13 +128,44 @@ public class SessionSingleton {
         if (m_width == -1 && m_height == -1) {
             getScreenResolution(getContext());
         }
-        m_columnsPerPage = m_width / 300;
+        m_columnsPerPage = m_width / getPatientColumnWidth();
         return m_columnsPerPage;
     }
 
     public void clearPatientData()
     {
         m_patientData.clear();
+    }
+
+    public void setPatientRowHeight(int height)
+    {
+        m_patientRowHeight = height;
+    }
+
+    private int getPatientRowHeight()
+    {
+        return (int) (m_patientRowHeight / m_density);
+    }
+
+    public void setPatientColumnWidth(int width)
+    {
+        m_patientColumnWidth = width;
+    }
+
+    private int getPatientColumnWidth()
+    {
+        return (int) (m_patientColumnWidth / m_density);
+    }
+
+
+    public void setHeaderHeight(int height)
+    {
+        m_headerHeight = height;
+    }
+
+    private int getHeaderHeight()
+    {
+        return (int) (m_headerHeight / m_density);
     }
 
     private void getScreenResolution(Context context)
@@ -137,6 +176,7 @@ public class SessionSingleton {
         display.getMetrics(metrics);
         m_width = (int) (metrics.widthPixels / metrics.density);
         m_height = (int) (metrics.heightPixels / metrics.density);
+        m_density = metrics.density;
     }
 
     public int getMaxColumnSize() {
@@ -144,7 +184,7 @@ public class SessionSingleton {
             getScreenResolution(getContext());
         }
 
-        m_maxColumnSize = (m_height / 200);
+        m_maxColumnSize = (m_height - getHeaderHeight()) / getPatientRowHeight();
         return m_maxColumnSize;
     }
 
