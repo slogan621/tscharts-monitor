@@ -184,7 +184,11 @@ public class SessionSingleton {
             getScreenResolution(getContext());
         }
 
-        m_maxColumnSize = (m_height - getHeaderHeight()) / getPatientRowHeight();
+        if (getPatientRowHeight() > 0) {
+            m_maxColumnSize = (m_height - getHeaderHeight()) / getPatientRowHeight();
+        } else {
+            m_maxColumnSize = 1;  // avoid divide by zero
+        }
         return m_maxColumnSize;
     }
 
