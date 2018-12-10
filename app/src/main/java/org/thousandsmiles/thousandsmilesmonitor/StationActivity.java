@@ -119,17 +119,20 @@ public class StationActivity extends AppCompatActivity {
                 int childCount = table.getChildCount();
 
                 // Remove all rows except the headers and other static rows near the top
-                if (childCount > 4) {
+
+                boolean done = false;
+                TableRow row = null;
+                int index = childCount;
+                while (done == false && index > 0) {
 
                     /* before we remove rows, calculate some sizes */
 
                     /* XXX this is ugly, but needed for the way we layout things */
 
-                    TableRow row = (TableRow) table.getChildAt(4);
-                    if (row != null && row.getVisibility() == VISIBLE)
-                    {
+                    row = (TableRow) table.getChildAt(index);
+                    if (row != null && row.getVisibility() == VISIBLE) {
                         m_sess.setPatientRowHeight(row.getMeasuredHeight());
-                        for (int count = 0; count < row.getChildCount(); count++) {
+                        for (int count = 0; done == false && count < row.getChildCount(); count++) {
                             View cv = row.getChildAt(count);
 
                             if (cv != null && cv.getVisibility() == VISIBLE) {
@@ -159,55 +162,56 @@ public class StationActivity extends AppCompatActivity {
                                     }
                                     if (sawImage == true && sawText == true && widthAcc != 0) {
                                         m_sess.setPatientColumnWidth(widthAcc);
+                                        done = true;
                                         break;
                                     }
                                 }
                             }
                         }
                     }
-
-                    int hAcc = 0;
-
-                    View v = findViewById(R.id.statusLinearLayout);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getPaddingBottom();
-                        hAcc += v.getPaddingTop();
-                    }
-
-                    v = findViewById(R.id.tableLayout1);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    v = findViewById(R.id.stationlabels);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    v = findViewById(R.id.lineRow2);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    v = findViewById(R.id.lineRow);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    v = findViewById(R.id.stationheaders);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    v = findViewById(R.id.clinicstatus);
-                    if (v != null && v.getVisibility() == VISIBLE) {
-                        hAcc += v.getMeasuredHeight();
-                    }
-
-                    m_sess.setHeaderHeight(hAcc + 100);  // XXX 100 is a fudge, need to figure out why it is needed
-
-                    table.removeViews(4, childCount - 4);
+                    index = index - 1;
                 }
+                int hAcc = 0;
+
+                View v = findViewById(R.id.statusLinearLayout);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getPaddingBottom();
+                    hAcc += v.getPaddingTop();
+                }
+
+                v = findViewById(R.id.tableLayout1);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                v = findViewById(R.id.stationlabels);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                v = findViewById(R.id.lineRow2);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                v = findViewById(R.id.lineRow);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                v = findViewById(R.id.stationheaders);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                v = findViewById(R.id.clinicstatus);
+                if (v != null && v.getVisibility() == VISIBLE) {
+                    hAcc += v.getMeasuredHeight();
+                }
+
+                m_sess.setHeaderHeight(hAcc + 100);  // XXX 100 is a fudge, need to figure out why it is needed
+
+                table.removeViews(4, childCount - 4);
             }
         }
 

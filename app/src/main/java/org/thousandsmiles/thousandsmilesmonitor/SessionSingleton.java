@@ -46,8 +46,9 @@ public class SessionSingleton {
     private int m_maxColumnSize = 6;
     private int m_height = -1;
     private int m_width = -1;
+    private final int m_minPatientColumnWidth = 400;
     private int m_patientRowHeight = 300;
-    private int m_patientColumnWidth = 400;
+    private int m_patientColumnWidth = m_minPatientColumnWidth;
     private int m_headerHeight = 0;
     private float m_density;
     private String m_lang = "en_US";
@@ -149,7 +150,9 @@ public class SessionSingleton {
 
     public void setPatientColumnWidth(int width)
     {
-        m_patientColumnWidth = width;
+        if (width > m_minPatientColumnWidth) {
+            m_patientColumnWidth = width;
+        }
     }
 
     private int getPatientColumnWidth()
