@@ -44,7 +44,7 @@
     <string name="delete_yes">Delete</string>
     <string name="delete_cancel">Cancel</string>
     <string name="msg_delete">Delete</string>
-    <string name="msg_remove_from_queue">"Remove patient %d from this queue?"</string>
+    <string name="msg_remove_from_queue">"Remove patient %d from %s queue?"</string>
 
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>

@@ -55,16 +55,33 @@ public class SessionSingleton {
     private static JSONObject m_queueStatusJSON;
     private ArrayList<MonitorPage> m_monitorPages = new ArrayList<MonitorPage>();
     private static ArrayList<Integer> m_columnsPerQueue = new ArrayList<Integer>();
+    private static HashMap<Integer, String> m_stationIdToName = new HashMap<Integer, String>();
     private static HashMap<Integer, JSONObject> m_patientData = new HashMap<Integer, JSONObject>();
     private static HashMap<Integer, JSONObject> m_clinicStationData = new HashMap<Integer, JSONObject>();
     private CommonSessionSingleton m_commonSessionSingleton = null;
 
-    public CommonSessionSingleton getCommonSessionSingleton()
-    {
+    public CommonSessionSingleton getCommonSessionSingleton() {
         if (m_commonSessionSingleton == null) {
             m_commonSessionSingleton = CommonSessionSingleton.getInstance();
         }
         return m_commonSessionSingleton;
+    }
+
+    public boolean isXRay(int clinicStationId)
+    {
+        boolean ret = false;
+        JSONObject o = m_clinicStationData.get(clinicStationId);
+        if (o != null) {
+            try {
+                int stationId = o.getInt("station");
+                String name = m_stationIdToName.get(stationId);
+                if (name != null && (name.equals("X-Ray") || name.equals("XRay"))) {
+                    ret = true;
+                }
+            } catch (Exception e) {
+            }
+        }
+        return ret;
     }
 
     public Context getContext() {
@@ -75,8 +92,7 @@ public class SessionSingleton {
         getCommonSessionSingleton().setContext(ctx);
     }
 
-    public void setQueueStatusJSON(JSONObject obj)
-    {
+    public void setQueueStatusJSON(JSONObject obj) {
         m_queueStatusJSON = obj;
     }
 
@@ -86,6 +102,20 @@ public class SessionSingleton {
 
     public String getLanguage() {
         return m_lang;
+    }
+
+    public void addStationData(JSONArray data) {
+        int i;
+        JSONObject stationdata;
+
+        for (i = 0; i < data.length(); i++)  {
+            try {
+                stationdata = data.getJSONObject(i);
+                m_stationIdToName.put(stationdata.getInt("id"), stationdata.getString("name"));
+            } catch (JSONException e) {
+                return;
+            }
+        }
     }
 
     public String getOverallStatus()
@@ -615,6 +645,12 @@ public class SessionSingleton {
                     JSONObject entry = o.getJSONArray("entries").getJSONObject(row + offset);
                     int patient = entry.getInt("patient");
                     rd.setPatientid(patient);
+                    int clinicstation = o.getInt("clinicstation");
+                    JSONObject c = getClinicStationData(clinicstation);
+                    if (c != null) {
+                        rd.setClinicStationName(c.getString("name"));
+                    }
+                    rd.setClinicstation(clinicstation);
                     rd.setRoutineslipentry(entry.getInt("routingslipentry"));
                     String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
@@ -678,10 +714,11 @@ public class SessionSingleton {
                     if (o != null) {
                         int clinicstation = o.getInt("clinicstation");
                         JSONObject c = getClinicStationData(clinicstation);
+
                         rd.setClinicstation(clinicstation);
 
                         if (c != null) {
-
+                            rd.setClinicStationName(c.getString("name"));
                             if (c.getBoolean("active") == true) {
 
                                 int activePatient = c.getInt("activepatient");

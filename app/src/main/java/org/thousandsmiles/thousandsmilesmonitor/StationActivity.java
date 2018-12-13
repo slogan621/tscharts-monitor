@@ -78,7 +78,7 @@ public class StationActivity extends AppCompatActivity {
                                float velocityX, float velocityY) {
             //Log.d(DEBUG_TAG, "onFling: " + event1.toString() + event2.toString());
             /*
-             * XXX in some cases, veloxityX is neg and in some, pos, could be due to
+             * XXX in some cases, velocityX is neg and in some, pos, could be due to
              *  tablet orientation. Needs to be investigated. But for now, any swipe that
              * is along the x axis will trigger the swipe
              */
@@ -356,7 +356,10 @@ public class StationActivity extends AppCompatActivity {
                                 public void onClick(View v)
                                 {
                                     RowData rdTag = (RowData) v.getTag();
-                                    showDeleteDialog(rdTag);
+                                    int clinicStation = rdTag.getClinicstation();
+                                    if (m_sess.isXRay(clinicStation)) {
+                                        showDeleteDialog(rdTag);
+                                    }
                                 }
                             });
 
@@ -438,6 +441,9 @@ public class StationActivity extends AppCompatActivity {
                 }
                 Log.i("Station Activity", "Top of Loop");
                 if (page == 0 || m_refresh == true) {
+                    StationData sd = new StationData();
+                    sd.setContext(m_context);
+                    sd.updateStationData(); // get the list of stations
                     m_refresh = false;
                     QueueREST queueData = new QueueREST(m_context);
                     lock = queueData.getQueueData(sess.getClinicId());

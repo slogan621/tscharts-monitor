@@ -27,9 +27,15 @@ public class RowData implements Parcelable {
     private int m_queue;
     private int m_patientid;
     private int m_routineslipentry;
+    private String m_clinicStationName;
 
     public int getClinicstation() {
         return m_clinicstation;
+    }
+
+    public String getClinicStationName()
+    {
+        return m_clinicStationName;
     }
 
     public int describeContents() {
@@ -43,6 +49,7 @@ public class RowData implements Parcelable {
         dest.writeInt(this.m_queue);
         dest.writeInt(m_patientid);
         dest.writeInt(m_routineslipentry);
+        dest.writeString(m_clinicStationName);
     }
 
     public static final Parcelable.Creator<RowData> CREATOR
@@ -62,18 +69,26 @@ public class RowData implements Parcelable {
         m_queue = 0;
         m_clinicstation = 0;
         m_rowdata = "";
+        m_clinicStationName = "";
     }
 
     private RowData(Parcel in) {
+        m_clinicStationName = in.readString();
         m_routineslipentry = in.readInt();
         m_patientid = in.readInt();
         m_queue = in.readInt();
         m_clinicstation = in.readInt();
         m_rowdata = in.readString();
+
     }
 
     public void setClinicstation(int clinicstation) {
         m_clinicstation = clinicstation;
+    }
+
+    public void setClinicStationName(String name)
+    {
+        m_clinicStationName = name;
     }
 
     public int getQueue() {

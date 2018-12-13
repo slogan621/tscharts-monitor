@@ -41,7 +41,7 @@
     <string name="delete_yes">Retirar</string>
     <string name="delete_cancel">Cancelar</string>
     <string name="msg_delete">Retirar</string>
-    <string name="msg_remove_from_queue">"¿Retire al paciente %d de la línea?"</string>
+    <string name="msg_remove_from_queue">"¿Retire al paciente %d de la línea %s?"</string>
 
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>
