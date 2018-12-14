@@ -6,7 +6,9 @@
     <color name="colorBlack">#000000</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorLightRed">#FF0033</color>
+    <color name="colorPink">#ffb6c1</color>
     <color name="skyBlue">#00FFFF</color>
+    <color name="colorLightBlue">#add8e6</color>
     <color name="colorGreen">#00FF00</color>
     <color name="colorYellow">#FFFF00</color>
     <color name="colorPrimaryDark">#303F9F</color>

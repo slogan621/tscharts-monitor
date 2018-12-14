@@ -47,7 +47,8 @@ public class DeleteFromQueueDialogFragment extends DialogFragment {
         m_view = inflater.inflate(R.layout.delete_queue_dialog, null);
         TextView text = (TextView) m_view.findViewById(R.id.title);
 
-        String title = String.format(getString(R.string.msg_remove_from_queue), m_rd.getPatientid(),
+        String title = String.format(getString(R.string.msg_remove_from_queue),
+                m_rd.getPatientName(), m_rd.getPatientid(),
                 m_rd.getClinicStationName());
         text.setText(title);
 

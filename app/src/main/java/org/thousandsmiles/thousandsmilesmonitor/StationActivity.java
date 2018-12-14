@@ -334,18 +334,22 @@ public class StationActivity extends AppCompatActivity {
                             parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
 
                             ImageView iv = new ImageView(m_context);
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, 120);
                             iv.setLayoutParams(layoutParams);
 
                             RowData rd = rowdata.get(j);
                             String t = rd.getRowdata();
                             if (t.equals("") == false) {
-                                if (t.indexOf("Male") >= 0 || t.indexOf("Mascul") >= 0) {
+                                if (rd.isMale() == true) {
                                     //iv.setImageResource(R.drawable.imageboywhitehalf);
                                     iv.setImageResource(R.drawable.boyfront);
+                                    iv.setPadding(5,5, 5, 5);
+                                    iv.setBackgroundColor(m_context.getResources().getColor(R.color.colorLightBlue));
                                 } else {
                                     //iv.setImageResource(R.drawable.imagegirlwhitehalf);
                                     iv.setImageResource(R.drawable.girlfront);
+                                    iv.setPadding(5,5, 5, 5);
+                                    iv.setBackgroundColor(m_context.getResources().getColor(R.color.colorPink));
                                 }
                             }
 

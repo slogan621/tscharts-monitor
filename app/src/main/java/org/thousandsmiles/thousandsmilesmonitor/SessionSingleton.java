@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2018
+ * (C) Copyright Thousand Smiles Foundation 2017-2018
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.View;
 import android.view.WindowManager;
 
 import org.json.JSONArray;
@@ -36,9 +35,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
-
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
@@ -189,7 +185,6 @@ public class SessionSingleton {
     {
         return (int) (m_patientColumnWidth / m_density);
     }
-
 
     public void setHeaderHeight(int height)
     {
@@ -342,10 +337,6 @@ public class SessionSingleton {
         }
 
         return count;
-    }
-
-    public void setClinicId(int id) {
-        m_commonSessionSingleton.setClinicId(id);
     }
 
     public ArrayList<String> getLabels(int page, int count) {
@@ -602,12 +593,12 @@ public class SessionSingleton {
                 }
             }
 
-            ret = String.format("%05d %s\n%s\n%10s-%s %10s\n",
+            ret = String.format("%05d %s %s\n%.10s-%.10s, %.10s\n",
                     patient,
                     p.getString("dob"),
-                    gender,
+                    gender.charAt(0),
                     p.getString("paternal_last"),
-                    p.getString("maternal_last").charAt(0),
+                    p.getString("maternal_last"),
                     p.getString("first"));
             /*
             ret = String.format("%d: %s-%s, %c\n%s %s: %s\n",
@@ -621,6 +612,19 @@ public class SessionSingleton {
                     */
         } catch (JSONException e) {
             ret = "";
+        }
+        return ret;
+    }
+
+    public String patientNameToString(JSONObject patientData)
+    {
+        String ret = "";
+        try {
+            ret = String.format("%.10s-%.10s, %.10s\n",
+                    patientData.getString("paternal_last"),
+                    patientData.getString("maternal_last"),
+                    patientData.getString("first"));
+        } catch (Exception e) {
         }
         return ret;
     }
@@ -644,7 +648,10 @@ public class SessionSingleton {
                     rd.setQueue(pc.getQueue());
                     JSONObject entry = o.getJSONArray("entries").getJSONObject(row + offset);
                     int patient = entry.getInt("patient");
+                    JSONObject patientData = getPatientData(patient);
+                    rd.setPatientName(patientNameToString(patientData));
                     rd.setPatientid(patient);
+
                     int clinicstation = o.getInt("clinicstation");
                     JSONObject c = getClinicStationData(clinicstation);
                     if (c != null) {
@@ -654,7 +661,18 @@ public class SessionSingleton {
                     rd.setRoutineslipentry(entry.getInt("routingslipentry"));
                     String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
-                    String patientString = patientToString(patient, p);
+                    String patientString = "";
+                    if (p != null) {
+                        patientString = patientToString(patient, p);
+                        String gender = p.getString("gender");
+                        if (gender != null) {
+                            if(gender.equals("Female")) {
+                                rd.setIsMale(false);
+                            } else {
+                                rd.setIsMale(true);
+                            }
+                        }
+                    }
                     String waiting;
 
                     if (m_lang.equals("en_US")) {
@@ -726,6 +744,15 @@ public class SessionSingleton {
                                 JSONObject p = getPatientData(activePatient);
 
                                 if (p != null) {
+                                    rd.setPatientName(patientNameToString(p));
+                                    String gender = p.getString("gender");
+                                    if (gender != null) {
+                                        if(gender.equals("Female")) {
+                                            rd.setIsMale(false);
+                                        } else {
+                                            rd.setIsMale(true);
+                                        }
+                                    }
                                     patientString = patientToString(activePatient, p);
                                 } else {
                                     patientString = "";

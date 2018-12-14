@@ -28,15 +28,8 @@ public class RowData implements Parcelable {
     private int m_patientid;
     private int m_routineslipentry;
     private String m_clinicStationName;
-
-    public int getClinicstation() {
-        return m_clinicstation;
-    }
-
-    public String getClinicStationName()
-    {
-        return m_clinicStationName;
-    }
+    private boolean m_isMale;
+    private String m_patientName;
 
     public int describeContents() {
         return 0;
@@ -50,6 +43,8 @@ public class RowData implements Parcelable {
         dest.writeInt(m_patientid);
         dest.writeInt(m_routineslipentry);
         dest.writeString(m_clinicStationName);
+        dest.writeInt(this.m_isMale == true ? 1 : 0);
+        dest.writeString(this.m_patientName);
     }
 
     public static final Parcelable.Creator<RowData> CREATOR
@@ -70,25 +65,47 @@ public class RowData implements Parcelable {
         m_clinicstation = 0;
         m_rowdata = "";
         m_clinicStationName = "";
+        m_isMale = false;
+        m_patientName = "";
     }
 
     private RowData(Parcel in) {
+        m_patientName = in.readString();
+        m_isMale = in.readInt() == 1;
         m_clinicStationName = in.readString();
         m_routineslipentry = in.readInt();
         m_patientid = in.readInt();
         m_queue = in.readInt();
         m_clinicstation = in.readInt();
         m_rowdata = in.readString();
-
     }
 
     public void setClinicstation(int clinicstation) {
         m_clinicstation = clinicstation;
     }
 
+    public int getClinicstation() {
+        return m_clinicstation;
+    }
+
     public void setClinicStationName(String name)
     {
         m_clinicStationName = name;
+    }
+
+    public String getClinicStationName()
+    {
+        return m_clinicStationName;
+    }
+
+    public void setPatientName(String name)
+    {
+        m_patientName = name;
+    }
+
+    public String getPatientName()
+    {
+        return m_patientName;
     }
 
     public int getQueue() {
@@ -129,5 +146,13 @@ public class RowData implements Parcelable {
 
     public void setWaitingItem(boolean waitingItem) {
         m_isWaitingItem = waitingItem;
+    }
+
+    public boolean isMale() {
+        return m_isMale;
+    }
+
+    public void setIsMale(boolean isMale) {
+        m_isMale = isMale;
     }
 }
