@@ -33,6 +33,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -58,6 +60,7 @@ public class StationActivity extends AppCompatActivity {
     Context m_context;
     boolean m_swiped = false;
     boolean m_refresh = false;
+    boolean m_paused = false;
     private GestureDetectorCompat m_detector;
 
     public void setRefresh()
@@ -437,6 +440,21 @@ public class StationActivity extends AppCompatActivity {
             int status = -1;
             int numPages = 0;
             int page = 0;
+            final ImageButton pause = findViewById(R.id.pause_button);
+            if (pause != null) {
+                pause.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (m_paused == true) {
+                            pause.setImageResource(R.drawable.ic_pause_black_36dp);
+                            m_paused = false;
+                        } else {
+                            pause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
+                            m_paused = true;
+                        }
+                    }
+                });
+            }
 
             while (true) {
                 if (isCancelled()) {
@@ -534,7 +552,7 @@ public class StationActivity extends AppCompatActivity {
                         } catch (InterruptedException e) {
                         }
                     }
-                    if (m_refresh == false) {
+                    if (m_swiped || (m_refresh == false && m_paused == false)) {
                         page++;
                     }
                     m_swiped = false;
