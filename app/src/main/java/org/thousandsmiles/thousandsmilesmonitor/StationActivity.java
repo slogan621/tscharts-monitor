@@ -89,9 +89,9 @@ public class StationActivity extends AppCompatActivity {
             if (abs((int)velocityX) > abs((int)velocityY)) {
                 m_swiped = true;
                 if (velocityX < 0) {
-                    m_swipeBack = true;
-                } else {
                     m_swipeBack = false;
+                } else {
+                    m_swipeBack = true;
                 }
             }
             return true;
