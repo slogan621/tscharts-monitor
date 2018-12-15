@@ -59,6 +59,7 @@ public class StationActivity extends AppCompatActivity {
     GetAndDisplayTask m_task = null;
     Context m_context;
     boolean m_swiped = false;
+    boolean m_swipeBack = false;
     boolean m_refresh = false;
     boolean m_paused = false;
     private GestureDetectorCompat m_detector;
@@ -87,6 +88,11 @@ public class StationActivity extends AppCompatActivity {
              */
             if (abs((int)velocityX) > abs((int)velocityY)) {
                 m_swiped = true;
+                if (velocityX < 0) {
+                    m_swipeBack = true;
+                } else {
+                    m_swipeBack = false;
+                }
             }
             return true;
         }
@@ -520,7 +526,18 @@ public class StationActivity extends AppCompatActivity {
                         }
                     }
                     if (m_swiped || (m_refresh == false && m_paused == false)) {
-                        page++;
+                        if (m_swiped == true) {
+                            if (m_swipeBack) {
+                                page--;
+                                if (page < 0) {
+                                    page = 0;
+                                }
+                            } else {
+                                page++;
+                            }
+                        } else {
+                            page++;
+                        }
                     }
                     m_swiped = false;
                     if (page >= numPages || m_refresh == true) {
