@@ -38,7 +38,8 @@ import java.util.TimeZone;
 
 public class SessionSingleton {
     private static SessionSingleton m_instance;
-    private int m_columnsPerPage = 5;
+    private int m_columnsPerPage = 4;
+    private int m_maxColumnsPerPage = 4;
     private int m_maxColumnSize = 4;
     private int m_height = -1;
     private int m_width = -1;
@@ -156,6 +157,9 @@ public class SessionSingleton {
             getScreenResolution(getContext());
         }
         m_columnsPerPage = m_width / getPatientColumnWidth();
+        if (m_columnsPerPage > m_maxColumnsPerPage) {
+            m_columnsPerPage = m_maxColumnsPerPage;
+        }
         return m_columnsPerPage;
     }
 

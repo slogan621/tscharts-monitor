@@ -287,7 +287,7 @@ public class StationActivity extends AppCompatActivity {
                             parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
 
                             ImageView iv = new ImageView(m_context);
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, 120);
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
                             iv.setLayoutParams(layoutParams);
 
                             RowData rd = rowdata.get(j);
