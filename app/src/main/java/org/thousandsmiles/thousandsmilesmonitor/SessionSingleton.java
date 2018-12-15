@@ -40,7 +40,8 @@ public class SessionSingleton {
     private static SessionSingleton m_instance;
     private int m_columnsPerPage = 4;
     private int m_maxColumnsPerPage = 4;
-    private int m_maxColumnSize = 4;
+    private int m_maxColumnSize = 5;
+    private int m_curColumnSize = 5;
     private int m_height = -1;
     private int m_width = -1;
     private final int m_minPatientColumnWidth = 400;
@@ -173,6 +174,13 @@ public class SessionSingleton {
         m_patientRowHeight = height;
     }
 
+    public void setPatientColumnWidth(int width)
+    {
+        if (width > m_minPatientColumnWidth) {
+            m_patientColumnWidth = width;
+        }
+    }
+
     private int getPatientRowHeight()
     {
         return (int) (m_patientRowHeight / m_density);
@@ -204,21 +212,22 @@ public class SessionSingleton {
         m_density = metrics.density;
     }
 
-    public int getMaxColumnSize() {
-        int ret;
+    public int getCurColumnSize() {
         if (m_width == -1 && m_height == -1) {
             getScreenResolution(getContext());
         }
 
         if (getPatientRowHeight() > 0) {
-            ret = (m_height - getHeaderHeight()) / getPatientRowHeight();
+            m_curColumnSize = (m_height - getHeaderHeight()) / getPatientRowHeight();
         } else {
-            ret = 1;  // avoid divide by zero
+            m_curColumnSize = 1;  // avoid divide by zero
         }
-        if (ret > m_maxColumnSize) {
-            ret = m_maxColumnSize;
+
+        if (m_curColumnSize > m_maxColumnSize) {
+            m_curColumnSize = m_maxColumnSize;
         }
-        return ret;
+
+        return m_curColumnSize;
     }
 
     public int getPageColumnCount(int page) {
@@ -246,8 +255,8 @@ public class SessionSingleton {
         catch (org.json.JSONException e) {
             ret = 0;
         }
-        if (ret > m_maxColumnSize) {
-            ret = m_maxColumnSize;
+        if (ret > m_curColumnSize) {
+            ret = m_curColumnSize;
         }
         return ret;
     }
@@ -260,7 +269,7 @@ public class SessionSingleton {
 
         m_monitorPages.clear();
         m_columnsPerQueue = new ArrayList<Integer>();
-        int maxColumnSize = getMaxColumnSize();
+        int curColumnSize = getCurColumnSize();
         try {
             JSONArray r = m_queueStatusJSON.getJSONArray("queues");
 
@@ -288,8 +297,8 @@ public class SessionSingleton {
                 } else {
                     stationName = o.getString("name_es");
                 }
-                columnCount = n / maxColumnSize;
-                if (n % maxColumnSize != 0) {
+                columnCount = n / curColumnSize;
+                if (n % curColumnSize != 0) {
                     columnCount++;
                 }
                 int colNumber = 0;
@@ -315,7 +324,7 @@ public class SessionSingleton {
                     column.setHeader(header);
                     if (columnCount > 1) {
                         column.setOffset(offset);
-                        offset += maxColumnSize;
+                        offset += curColumnSize;
                     } else {
                         column.setOffset(offset);
                     }

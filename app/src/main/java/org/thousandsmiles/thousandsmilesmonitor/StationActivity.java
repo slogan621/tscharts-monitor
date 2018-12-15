@@ -125,7 +125,54 @@ public class StationActivity extends AppCompatActivity {
         private void cleanStationTable(TableLayout table) {
 
             if (table != null) {
+                int childCount = table.getChildCount();
 
+                boolean done = false;
+                TableRow row = null;
+                int index = childCount;
+                while (done == false && index > 0) {
+                    /* before we remove rows, calculate some sizes */
+                    /* XXX this is ugly, but needed for the way we layout things */
+                    row = (TableRow) table.getChildAt(index);
+                    if (row != null && row.getVisibility() == VISIBLE) {
+                        m_sess.setPatientRowHeight(row.getMeasuredHeight());
+                        for (int count = 0; done == false && count < row.getChildCount(); count++) {
+                            View cv = row.getChildAt(count);
+                            if (cv != null && cv.getVisibility() == VISIBLE) {
+                                if (cv instanceof LinearLayout) {
+                                    int widthAcc = 0;
+                                    ViewGroup vg = (ViewGroup) cv;
+                                    boolean sawImage = false;
+                                    boolean sawText = false;
+                                    for (int i = 0; vg != null && i < vg.getChildCount(); i++) {
+                                        View inner = vg.getChildAt(i);
+                                        if (inner != null && inner instanceof TextView) {
+                                            int w = 0;
+                                            w = inner.getWidth();
+                                            if (w != 0) {
+                                                sawText = true;
+                                                widthAcc += inner.getWidth();
+                                            }
+                                        } else if (inner != null && inner instanceof ImageView) {
+                                            int w = 0;
+                                            w = inner.getWidth();
+                                            if (w != 0) {
+                                                sawImage = true;
+                                                widthAcc += inner.getWidth();
+                                            }
+                                        }
+                                    }
+                                    if (sawImage == true && sawText == true && widthAcc != 0) {
+                                        m_sess.setPatientColumnWidth(widthAcc);
+                                        done = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    index = index - 1;
+                }
                 // Remove all rows except the headers and other static rows near the top
 
                 int hAcc = 0;
@@ -168,8 +215,6 @@ public class StationActivity extends AppCompatActivity {
 
                 m_sess.setHeaderHeight(hAcc + 100);  // XXX 100 is a fudge, need to figure out why it is needed
 
-
-                int childCount = table.getChildCount();
                 table.removeViews(4, childCount - 4);
             }
         }
@@ -433,7 +478,7 @@ public class StationActivity extends AppCompatActivity {
                     break;
                 }
                 Log.i("Station Activity", "Top of Loop");
-                if (page == 0 || m_refresh == true) {
+                if (page == 0 || m_refresh == true || m_paused == true) {
                     StationData sd = new StationData();
                     sd.setContext(m_context);
                     sd.updateStationData(); // get the list of stations
