@@ -176,9 +176,11 @@ public class SessionSingleton {
 
     public void setPatientColumnWidth(int width)
     {
+        /*
         if (width > m_minPatientColumnWidth) {
             m_patientColumnWidth = width;
         }
+        */
     }
 
     private int getPatientRowHeight()

@@ -163,7 +163,7 @@ public class StationActivity extends AppCompatActivity {
                                         }
                                     }
                                     if (sawImage == true && sawText == true && widthAcc != 0) {
-                                        m_sess.setPatientColumnWidth(widthAcc);
+                                        //m_sess.setPatientColumnWidth(widthAcc);
                                         done = true;
                                         break;
                                     }
