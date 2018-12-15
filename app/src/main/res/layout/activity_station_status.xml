@@ -15,12 +15,11 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:shrinkColumns="*"
         android:stretchColumns="*">
         <TableRow
             android:id="@+id/header"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             >
             <TextView
                 android:id="@+id/filler1"
@@ -64,12 +63,11 @@
         android:layout_weight="10"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:shrinkColumns="*"
         android:stretchColumns="*">
         <TableRow
             android:id="@+id/stationlabels"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="0dp">
             <TextView
                 android:id="@+id/stationlabel1"
                 android:text=""
@@ -134,7 +132,7 @@
         <TableRow
             android:id="@+id/lineRow2"
             android:padding="10dip"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" >
             <View
                 android:id="@+id/line1"
@@ -147,7 +145,7 @@
         <TableRow
             android:id="@+id/stationheaders"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="0dp">
             <TextView
                 android:id="@+id/stationheader1"
                 android:text=""
@@ -217,7 +215,7 @@
         <TableRow
             android:id="@+id/lineRow"
             android:padding="10dip"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" >
             <View
                 android:id="@+id/line2"

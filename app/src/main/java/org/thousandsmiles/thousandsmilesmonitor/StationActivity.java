@@ -119,61 +119,9 @@ public class StationActivity extends AppCompatActivity {
         private void cleanStationTable(TableLayout table) {
 
             if (table != null) {
-                int childCount = table.getChildCount();
 
                 // Remove all rows except the headers and other static rows near the top
 
-                boolean done = false;
-                TableRow row = null;
-                int index = childCount;
-                while (done == false && index > 0) {
-
-                    /* before we remove rows, calculate some sizes */
-
-                    /* XXX this is ugly, but needed for the way we layout things */
-
-                    row = (TableRow) table.getChildAt(index);
-                    if (row != null && row.getVisibility() == VISIBLE) {
-                        m_sess.setPatientRowHeight(row.getMeasuredHeight());
-                        for (int count = 0; done == false && count < row.getChildCount(); count++) {
-                            View cv = row.getChildAt(count);
-
-                            if (cv != null && cv.getVisibility() == VISIBLE) {
-                                if (cv instanceof LinearLayout) {
-
-                                    int widthAcc = 0;
-                                    ViewGroup vg = (ViewGroup) cv;
-                                    boolean sawImage = false;
-                                    boolean sawText = false;
-                                    for (int i = 0; vg != null && i < vg.getChildCount(); i++) {
-                                        View inner = vg.getChildAt(i);
-                                        if (inner != null && inner instanceof TextView) {
-                                            int w = 0;
-                                            w = inner.getWidth();
-                                            if (w != 0) {
-                                                sawText = true;
-                                                widthAcc += inner.getWidth();
-                                            }
-                                        } else if (inner != null && inner instanceof ImageView) {
-                                            int w = 0;
-                                            w = inner.getWidth();
-                                            if (w != 0) {
-                                                sawImage = true;
-                                                widthAcc += inner.getWidth();
-                                            }
-                                        }
-                                    }
-                                    if (sawImage == true && sawText == true && widthAcc != 0) {
-                                        m_sess.setPatientColumnWidth(widthAcc);
-                                        done = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    index = index - 1;
-                }
                 int hAcc = 0;
 
                 View v = findViewById(R.id.statusLinearLayout);
@@ -214,6 +162,8 @@ public class StationActivity extends AppCompatActivity {
 
                 m_sess.setHeaderHeight(hAcc + 100);  // XXX 100 is a fudge, need to figure out why it is needed
 
+
+                int childCount = table.getChildCount();
                 table.removeViews(4, childCount - 4);
             }
         }
@@ -268,7 +218,7 @@ public class StationActivity extends AppCompatActivity {
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
                             b.setLines(4);
                             b.setMaxLines(4);
-                            b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                            b.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 
                             trow.addView(b);
                         }
@@ -310,7 +260,7 @@ public class StationActivity extends AppCompatActivity {
                             b.setTypeface(null, Typeface.BOLD);
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
                             b.setTextColor(ContextCompat.getColor(m_context, R.color.colorWhite));
-                            b.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                            b.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                             trow.addView(b);
                         }
                     }
@@ -331,7 +281,7 @@ public class StationActivity extends AppCompatActivity {
                             
                             LinearLayout parent = new LinearLayout(m_context);
 
-                            parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            parent.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
                             parent.setOrientation(LinearLayout.HORIZONTAL);
                             parent.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
@@ -370,6 +320,8 @@ public class StationActivity extends AppCompatActivity {
                                 }
                             });
 
+                            b.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
                             b.setText(t);
                             b.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
                             b.setTypeface(null, Typeface.BOLD);
@@ -377,22 +329,25 @@ public class StationActivity extends AppCompatActivity {
                             b.setLines(4);
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
                             b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
-                            if (i == -1) {
-                                b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
-                            } else if (rowdata.get(j).isWaitingItem()) {
-                                b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorYellow));
-                            } else {
-                                if (colorCount % 2 == 0) {
-                                    b.setBackgroundColor(colorWhite);
+
+                            if (t.equals("") == false) {
+                                if (i == -1) {
+                                    b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
+                                } else if (rowdata.get(j).isWaitingItem()) {
+                                    b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorYellow));
                                 } else {
-                                    b.setBackgroundColor(colorGrey);
+                                    if (colorCount % 2 == 0) {
+                                        b.setBackgroundColor(colorWhite);
+                                    } else {
+                                        b.setBackgroundColor(colorGrey);
+                                    }
                                 }
                             }
 
                             parent.addView(iv);
                             parent.addView(b);
 
-                            parent.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                            parent.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 
                             tr.addView(parent);
                         }
@@ -448,9 +403,19 @@ public class StationActivity extends AppCompatActivity {
                         if (m_paused == true) {
                             pause.setImageResource(R.drawable.ic_pause_black_36dp);
                             m_paused = false;
+                            StationActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), R.string.msg_display_is_resumed, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         } else {
                             pause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
                             m_paused = true;
+                            StationActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), R.string.msg_display_is_paused, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     }
                 });
@@ -539,10 +504,12 @@ public class StationActivity extends AppCompatActivity {
                     }
                 }
                 if (status == 200) {
-                    int pageColumnCount = m_sess.getPageColumnCount(page);
-                    displayHeader(page, pageColumnCount);
-                    displayOverallStatus();
-                    displayPage(page, pageColumnCount);
+                    if (page < numPages) {
+                        int pageColumnCount = m_sess.getPageColumnCount(page);
+                        displayHeader(page, pageColumnCount);
+                        displayOverallStatus();
+                        displayPage(page, pageColumnCount);
+                    }
 
                     long ticks = 20000;
                     while (ticks > 0 && m_swiped == false && m_refresh == false) {
@@ -556,7 +523,7 @@ public class StationActivity extends AppCompatActivity {
                         page++;
                     }
                     m_swiped = false;
-                    if (page == numPages || m_refresh == true) {
+                    if (page >= numPages || m_refresh == true) {
                         m_sess.clearPatientData();
                         if (m_refresh == false) {
                             page = 0;

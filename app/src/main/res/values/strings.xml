@@ -80,5 +80,7 @@
     <string name="clinicstationstatus_es">Estado de la clínica</string>
     <string name="msg_patient_successfully_removed">Patient successfully removed from queue</string>
     <string name="msg_patient_unsuccessfully_removed">Patient failed to be removed from the queue</string>
+    <string name="msg_display_is_resumed">Display is resumed</string>
+    <string name="msg_display_is_paused">Display is paused</string>
 
 </resources>
