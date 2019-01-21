@@ -448,27 +448,22 @@ public class StationActivity extends AppCompatActivity {
             int page = 0;
             final ImageButton pause = findViewById(R.id.pause_button);
             if (pause != null) {
-                pause.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (m_paused == true) {
-                            pause.setImageResource(R.drawable.ic_pause_black_36dp);
-                            m_paused = false;
-                            StationActivity.this.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), R.string.msg_display_is_resumed, Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } else {
-                            pause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
-                            m_paused = true;
-                            StationActivity.this.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), R.string.msg_display_is_paused, Toast.LENGTH_LONG).show();
-                                }
-                            });
+                StationActivity.this.runOnUiThread(new Runnable() {
+                                                       public void run() {
+                    pause.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (m_paused == true) {
+                                pause.setImageResource(R.drawable.ic_pause_black_36dp);
+                                m_paused = false;
+                                Toast.makeText(getApplicationContext(), R.string.msg_display_is_resumed, Toast.LENGTH_LONG).show();
+                            } else {
+                                pause.setImageResource(R.drawable.ic_play_arrow_black_36dp);
+                                m_paused = true;
+                                Toast.makeText(getApplicationContext(), R.string.msg_display_is_paused, Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
+                    }); }
                 });
             }
 
