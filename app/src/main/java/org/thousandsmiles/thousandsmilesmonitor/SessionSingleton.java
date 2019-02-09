@@ -564,6 +564,8 @@ public class SessionSingleton {
                                 rowHeader.setState(QueueHeader.State.ACTIVE);
                                 int activePatient = clinicStation.getInt("activepatient");
                                 rowHeader.setActivePatient(activePatient);
+                            } else if (clinicStation.getBoolean("finished") == true) {
+                                rowHeader.setState(QueueHeader.State.FINISHED);
                             } else {
                                 rowHeader.setState(QueueHeader.State.WAITING);
                             }

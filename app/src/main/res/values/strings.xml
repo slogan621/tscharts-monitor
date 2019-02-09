@@ -67,6 +67,9 @@
     <string name="waiting">Waiting</string>
     <string name="waiting_es">Esperando</string>
 
+    <string name="finished">Finished</string>
+    <string name="finished_es">Terminado</string>
+
     <string name="state">State</string>
     <string name="state_es">Estado</string>
 

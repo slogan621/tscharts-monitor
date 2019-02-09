@@ -238,6 +238,7 @@ public class StationActivity extends AppCompatActivity {
                     int green = ContextCompat.getColor(m_context, R.color.colorGreen);
                     int skyBlue = ContextCompat.getColor(m_context, R.color.skyBlue);
                     int yellow = ContextCompat.getColor(m_context, R.color.colorYellow);
+                    int colorGrey = ContextCompat.getColor(m_context, R.color.colorGrey);
 
                     headers = m_sess.getStationHeaders(offset, count);
 
@@ -261,7 +262,9 @@ public class StationActivity extends AppCompatActivity {
                                 b.setTextColor(yellow);
                             } else if (state == QueueHeader.State.AWAY) {
                                 b.setTextColor(skyBlue);
-                            } else {
+                            } else if (state == QueueHeader.State.FINISHED) {
+                                b.setTextColor(colorGrey);
+                            }else {
                                 b.setTextColor(green);
                             }
                             b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);

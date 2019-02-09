@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class QueueHeader {
     public enum State {
-        AWAY, ACTIVE, WAITING
+        AWAY, ACTIVE, WAITING, FINISHED
     }
 
     private SessionSingleton m_sess = SessionSingleton.getInstance();
@@ -74,6 +74,13 @@ public class QueueHeader {
                     label = String.format(m_sess.getContext().getResources().getString(R.string.waiting));
                 } else {
                     label = String.format(m_sess.getContext().getResources().getString(R.string.waiting_es));
+                }
+                break;
+            case FINISHED:
+                if (m_sess.getLanguage().equals("en_US")) {
+                    label = String.format(m_sess.getContext().getResources().getString(R.string.finished));
+                } else {
+                    label = String.format(m_sess.getContext().getResources().getString(R.string.finished_es));
                 }
                 break;
         }
