@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright Syd Logan 2017
  * (C) Copyright Thousand Smiles Foundation 2017

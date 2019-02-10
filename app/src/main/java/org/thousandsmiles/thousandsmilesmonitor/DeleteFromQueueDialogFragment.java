@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import org.thousandsmiles.tscharts_lib.HideyHelper;
 
 public class DeleteFromQueueDialogFragment extends DialogFragment {
 
@@ -60,11 +62,15 @@ public class DeleteFromQueueDialogFragment extends DialogFragment {
                         AsyncTask task = new DeleteFromQueueTask();
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object) m_rd, (Object) m_activity);
                         dialog.dismiss();
+                        HideyHelper h = new HideyHelper();
+                        h.toggleHideyBar(m_activity);
                     }
                 })
                 .setNegativeButton(R.string.delete_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
+                        HideyHelper h = new HideyHelper();
+                        h.toggleHideyBar(m_activity);
                     }
                 });
         Dialog ret = builder.create();

@@ -1,8 +1,8 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ public class DeleteFromQueueTask extends AsyncTask<Object, Object, Object> {
         if (params.length > 0) {
             m_params = (RowData) params[0];
             m_activity = (Activity) params[1];
-            goAway();
+            deleteRoutingSlip();
         }
         return "";
     }
 
-    private void goAway()
+    private void deleteRoutingSlip()
     {
         int status;
         Object lock;

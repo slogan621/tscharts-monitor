@@ -42,6 +42,9 @@
     <string name="delete_cancel">Cancelar</string>
     <string name="msg_delete">Retirar</string>
     <string name="msg_remove_from_queue">"¿Retire al paciente %s (ID=%d) de la línea %s?"</string>
+    <string name="msg_button_remove_from_queue">"Retire de la línea"</string>
+
+    <string name="cancel">Cancelar</string>
 
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>
@@ -79,5 +82,7 @@
     <string name="msg_patient_unsuccessfully_removed">Paciente no pudo ser eliminado de la línea</string>
     <string name="msg_display_is_resumed">La pantalla se reanuda</string>
     <string name="msg_display_is_paused">La pantalla está en pausa</string>
+    <string name="title_action_dialog">Select an Action for Patient</string>
+    <string name="msg_action_dialog">Seleccione una acción para el paciente %s (ID =%d) haciendo clic en el ícono de abajo o haga clic en el botón Cancelar.</string>
 
 </resources>

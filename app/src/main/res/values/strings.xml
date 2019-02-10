@@ -46,6 +46,8 @@
     <string name="msg_delete">Delete</string>
     <string name="msg_remove_from_queue">"Remove patient %s (ID=%d) from %s queue?"</string>
 
+    <string name="cancel">Cancel</string>
+
     <string name="estimated_waiting_time">Est. Wait</string>
     <string name="estimated_waiting_time_es">Espera Est.</string>
 
@@ -85,5 +87,7 @@
     <string name="msg_patient_unsuccessfully_removed">Patient failed to be removed from the queue</string>
     <string name="msg_display_is_resumed">Display is resumed</string>
     <string name="msg_display_is_paused">Display is paused</string>
-
+    <string name="title_action_dialog">Select an Action for Patient</string>
+    <string name="msg_action_dialog">Select an action for patient %s (ID=%d) by clicking an icon below, or click the Cancel button.</string>
+    <string name="msg_button_remove_from_queue">"Remove from queue"</string>
 </resources>

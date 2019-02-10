@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2019
+ * (C) Copyright Thousand Smiles Foundation 2017-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -30,10 +32,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -362,17 +367,15 @@ public class StationActivity extends AppCompatActivity {
 
                             TextView b = new TextView(m_context);
                             b.setTag(rd);
-                            b.setOnClickListener(new View.OnClickListener()
-                            {
-                                public void onClick(View v)
-                                {
-                                    RowData rdTag = (RowData) v.getTag();
-                                    int clinicStation = rdTag.getClinicstation();
-                                    if (m_sess.isXRay(clinicStation)) {
-                                        showDeleteDialog(rdTag);
+                            if (i >= 0) {
+                                b.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        RowData rdTag = (RowData) v.getTag();
+                                        int clinicStation = rdTag.getClinicstation();
+                                        showActionDialog(rdTag, m_sess.isXRay(clinicStation));
                                     }
-                                }
-                            });
+                                });
+                            }
 
                             b.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
@@ -717,13 +720,63 @@ public class StationActivity extends AppCompatActivity {
         System.exit(1);
     }
 
-    void showDeleteDialog(RowData rd)
+    AlertDialog showActionDialog(final RowData rd, boolean isXray)
     {
-        DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(null, rd);
-        rtc.setArguments(args);
-        rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(StationActivity.this);
+        // Get the layout inflater
+        LayoutInflater inflater = StationActivity.this.getLayoutInflater();
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View v = inflater.inflate(R.layout.action_dialog, null);
+        builder.setTitle(R.string.title_action_dialog);
+        String msgString = getResources().getString(R.string.msg_action_dialog);
+        String msg = String.format(msgString, rd.getPatientName(), rd.getPatientid());
+        builder.setMessage(msg);
+        builder.setView(v)
+                // Add action buttons
+                /*
+                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                    }
+                })
+                */
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ;
+                        //LoginDialogFragment.this.getDialog().cancel();
+                    }
+                });
+        GridView grid = v.findViewById(R.id.myGrid);
+        grid.setClickable(true);
+        ActionDialogAdapter a = new ActionDialogAdapter();
+        a.initialize(isXray);
+
+        final AlertDialog testDialog = builder.create();
+
+        grid.setAdapter(a);
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
+                Bundle args = new Bundle();
+                args.putParcelable(null, rd);
+                rtc.setArguments(args);
+                rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                testDialog.dismiss();
+                HideyHelper h = new HideyHelper();
+                h.toggleHideyBar(StationActivity.this);
+                //do some stuff here on click
+            }
+        });
+
+
+        testDialog.show();
+        return testDialog;
     }
 }
 
