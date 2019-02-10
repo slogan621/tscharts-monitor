@@ -735,18 +735,11 @@ public class StationActivity extends AppCompatActivity {
         builder.setMessage(msg);
         builder.setView(v)
                 // Add action buttons
-                /*
-                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
-                    }
-                })
-                */
+
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ;
-                        //LoginDialogFragment.this.getDialog().cancel();
+                        HideyHelper h = new HideyHelper();
+                        h.toggleHideyBar(StationActivity.this);
                     }
                 });
         GridView grid = v.findViewById(R.id.myGrid);
