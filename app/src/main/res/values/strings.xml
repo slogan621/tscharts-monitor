@@ -45,6 +45,7 @@
     <string name="delete_cancel">Cancel</string>
     <string name="msg_delete">Delete</string>
     <string name="msg_remove_from_queue">"Remove patient %s (ID=%d) from %s queue?"</string>
+    <string name="msg_delete_patient_from_clinic">"Delete patient %s (ID=%d) from the clinic?"</string>
 
     <string name="cancel">Cancel</string>
 
@@ -85,9 +86,13 @@
     <string name="clinicstationstatus_es">Estado de la clínica</string>
     <string name="msg_patient_successfully_removed">Patient successfully removed from queue</string>
     <string name="msg_patient_unsuccessfully_removed">Patient failed to be removed from the queue</string>
+    <string name="msg_patient_successfully_deleted_from_clinic">Patient successfully deleted from clinic</string>
+    <string name="msg_patient_unsuccessfully_deleted_from_clinic">Patient failed to be deleted from the clinic</string>
     <string name="msg_display_is_resumed">Display is resumed</string>
     <string name="msg_display_is_paused">Display is paused</string>
     <string name="title_action_dialog">Select an Action for Patient</string>
     <string name="msg_action_dialog">Select an action for patient %s (ID=%d) by clicking an icon below, or click the Cancel button.</string>
     <string name="msg_button_remove_from_queue">"Remove from queue"</string>
+    <string name="msg_button_delete_from_clinic">Delete Patient From Clinic</string>
+    <string name="title_delete_patient_from_clinic_dialog">Delete Patient From Clinic</string>
 </resources>

@@ -39,9 +39,11 @@ public class ActionDialogAdapter extends BaseAdapter {
         if (m_isXray == true) {
             m_actionIds.add(R.drawable.xray_selector);
             m_actionTextIds.add(R.string.msg_button_remove_from_queue);
+            m_actionIds.add(R.drawable.xray_selector);
+            m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         } else {
-            m_actionIds.remove(R.drawable.xray_selector);
-            m_actionTextIds.remove(R.string.msg_button_remove_from_queue);
+            m_actionIds.add(R.drawable.xray_selector);
+            m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         }
     }
 

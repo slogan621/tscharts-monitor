@@ -42,6 +42,7 @@
     <string name="delete_cancel">Cancelar</string>
     <string name="msg_delete">Retirar</string>
     <string name="msg_remove_from_queue">"¿Retire al paciente %s (ID=%d) de la línea %s?"</string>
+    <string name="msg_delete_patient_from_clinic">"¿Retire al paciente %s (ID=%d) de la clínica?"</string>
     <string name="msg_button_remove_from_queue">"Retire de la línea"</string>
 
     <string name="cancel">Cancelar</string>
@@ -80,9 +81,13 @@
     <string name="clinicstationstatus_es">Estado de la clínica</string>
     <string name="msg_patient_successfully_removed">Paciente eliminado con éxito de la línea</string>
     <string name="msg_patient_unsuccessfully_removed">Paciente no pudo ser eliminado de la línea</string>
+    <string name="msg_patient_successfully_deleted_from_clinic">Paciente eliminado con éxito de la clínica</string>
+    <string name="msg_patient_unsuccessfully_deleted_from_clinic">Paciente no pudo ser eliminado de la clínica</string>
     <string name="msg_display_is_resumed">La pantalla se reanuda</string>
     <string name="msg_display_is_paused">La pantalla está en pausa</string>
     <string name="title_action_dialog">Select an Action for Patient</string>
     <string name="msg_action_dialog">Seleccione una acción para el paciente %s (ID =%d) haciendo clic en el ícono de abajo o haga clic en el botón Cancelar.</string>
+    <string name="msg_button_delete_from_clinic">Eliminar paciente de la clínica</string>
+    <string name="title_delete_patient_from_clinic_dialog">Eliminar paciente de la clínica</string>
 
 </resources>

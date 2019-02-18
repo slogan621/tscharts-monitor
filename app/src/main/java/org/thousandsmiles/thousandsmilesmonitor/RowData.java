@@ -1,8 +1,8 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 /*
- * (C) Copyright Syd Logan 2018
- * (C) Copyright Thousand Smiles Foundation 2018
+ * (C) Copyright Syd Logan 2018-2019
+ * (C) Copyright Thousand Smiles Foundation 2018-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ public class RowData implements Parcelable {
     private int m_clinicstation;
     private int m_queue;
     private int m_patientid;
-    private int m_routineslipentry;
+    private int m_routingslipentry;
+    private int m_routingslip;
     private String m_clinicStationName;
     private boolean m_isMale;
     private String m_patientName;
@@ -41,7 +42,8 @@ public class RowData implements Parcelable {
         dest.writeInt(this.m_clinicstation);
         dest.writeInt(this.m_queue);
         dest.writeInt(m_patientid);
-        dest.writeInt(m_routineslipentry);
+        dest.writeInt(m_routingslipentry);
+        dest.writeInt(m_routingslip);
         dest.writeString(m_clinicStationName);
         dest.writeInt(this.m_isMale == true ? 1 : 0);
         dest.writeString(this.m_patientName);
@@ -59,7 +61,8 @@ public class RowData implements Parcelable {
     };
 
     public RowData() {
-        m_routineslipentry = 0;
+        m_routingslip = 0;
+        m_routingslipentry = 0;
         m_patientid = 0;
         m_queue = 0;
         m_clinicstation = 0;
@@ -73,7 +76,8 @@ public class RowData implements Parcelable {
         m_patientName = in.readString();
         m_isMale = in.readInt() == 1;
         m_clinicStationName = in.readString();
-        m_routineslipentry = in.readInt();
+        m_routingslip = in.readInt();
+        m_routingslipentry = in.readInt();
         m_patientid = in.readInt();
         m_queue = in.readInt();
         m_clinicstation = in.readInt();
@@ -124,12 +128,20 @@ public class RowData implements Parcelable {
         m_patientid = patientid;
     }
 
-    public int getRoutineslipentry() {
-        return m_routineslipentry;
+    public int getRoutingSlipEntry() {
+        return m_routingslipentry;
     }
 
-    public void setRoutineslipentry(int routineslipentry) {
-        m_routineslipentry = routineslipentry;
+    public void setRoutingSlipEntry(int routingslipentry) {
+        m_routingslipentry = routingslipentry;
+    }
+
+    public int getRoutingSlip() {
+        return m_routingslip;
+    }
+
+    public void setRoutingSlip(int routingslip) {
+        m_routingslip = routingslip;
     }
 
     public String getRowdata() {

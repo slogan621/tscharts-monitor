@@ -34,18 +34,18 @@ public class DeleteFromQueueTask extends AsyncTask<Object, Object, Object> {
         if (params.length > 0) {
             m_params = (RowData) params[0];
             m_activity = (Activity) params[1];
-            deleteRoutingSlip();
+            deleteRoutingSlipEntry();
         }
         return "";
     }
 
-    private void deleteRoutingSlip()
+    private void deleteRoutingSlipEntry()
     {
         int status;
         Object lock;
 
         final RoutingSlipEntryREST rse = new RoutingSlipEntryREST(m_sess.getContext());
-        lock = rse.deleteRoutingSlipEntry(m_params.getRoutineslipentry());
+        lock = rse.deleteRoutingSlipEntry(m_params.getRoutingSlipEntry());
 
         synchronized (lock) {
             // we loop here in case of race conditions or spurious interrupts

@@ -27,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
+import org.thousandsmiles.tscharts_lib.RoutingSlipEntryREST;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -672,7 +674,8 @@ public class SessionSingleton {
                         rd.setClinicStationName(c.getString("name"));
                     }
                     rd.setClinicstation(clinicstation);
-                    rd.setRoutineslipentry(entry.getInt("routingslipentry"));
+                    rd.setRoutingSlipEntry(entry.getInt("routingslipentry"));
+                    rd.setRoutingSlip(entry.getInt("routingslip"));
                     String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = "";

@@ -367,7 +367,7 @@ public class StationActivity extends AppCompatActivity {
 
                             TextView b = new TextView(m_context);
                             b.setTag(rd);
-                            if (i >= 0) {
+                            if (i >= 0 && t.equals("") == false) {
                                 b.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
                                         RowData rdTag = (RowData) v.getTag();
@@ -720,7 +720,7 @@ public class StationActivity extends AppCompatActivity {
         System.exit(1);
     }
 
-    AlertDialog showActionDialog(final RowData rd, boolean isXray)
+    AlertDialog showActionDialog(final RowData rd, final boolean isXray)
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(StationActivity.this);
         // Get the layout inflater
@@ -755,15 +755,22 @@ public class StationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
-                Bundle args = new Bundle();
-                args.putParcelable(null, rd);
-                rtc.setArguments(args);
-                rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                if (isXray && arg2 == 0) {
+                    DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(null, rd);
+                    rtc.setArguments(args);
+                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                } else if ((isXray && arg2 == 1) || (!isXray && arg2 == 0)) {
+                    MarkPatientRemovedDialogFragment rtc = new MarkPatientRemovedDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(null, rd);
+                    rtc.setArguments(args);
+                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                }
                 testDialog.dismiss();
                 HideyHelper h = new HideyHelper();
                 h.toggleHideyBar(StationActivity.this);
-                //do some stuff here on click
             }
         });
 

@@ -109,7 +109,6 @@ public class PatientREST extends RESTful {
             headers.put("Authorization", CommonSessionSingleton.getInstance().getToken());
             return headers;
         }
-
     }
 
     public PatientREST(Context context) {
