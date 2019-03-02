@@ -89,5 +89,6 @@
     <string name="msg_action_dialog">Seleccione una acción para el paciente %s (ID =%d) haciendo clic en el ícono de abajo o haga clic en el botón Cancelar.</string>
     <string name="msg_button_delete_from_clinic">Eliminar paciente de la clínica</string>
     <string name="title_delete_patient_from_clinic_dialog">Eliminar paciente de la clínica</string>
+    <string name="msg_button_remove_from_xray_queue">"Retire al paciente de la línea de rayos X"</string>
 
 </resources>
