@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017-2018
- * (C) Copyright Thousand Smiles Foundation 2017-2018
+ * (C) Copyright Syd Logan 2017-2019
+ * (C) Copyright Thousand Smiles Foundation 2017-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -453,6 +453,7 @@ public class SessionSingleton {
             int status = patientData.getStatus();
             if (status == 200) {
                 o = m_patientData.get(id);
+                m_commonSessionSingleton.isNewPatient(id);  // go preload the new patient map
             }
         }
         if (o == null) {
@@ -674,8 +675,10 @@ public class SessionSingleton {
                         rd.setClinicStationName(c.getString("name"));
                     }
                     rd.setClinicstation(clinicstation);
+                    rd.setIsXray(isXRay(clinicstation));
                     rd.setRoutingSlipEntry(entry.getInt("routingslipentry"));
                     rd.setRoutingSlip(entry.getInt("routingslip"));
+                    rd.setIsNewPatient(m_commonSessionSingleton.isNewPatient(patient));
                     String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = "";

@@ -31,6 +31,9 @@ public class RowData implements Parcelable {
     private String m_clinicStationName;
     private boolean m_isMale;
     private String m_patientName;
+    private boolean m_isNewPatient;
+    private boolean m_isXray;
+    private boolean m_isCurrentXray;
 
     public int describeContents() {
         return 0;
@@ -47,6 +50,9 @@ public class RowData implements Parcelable {
         dest.writeString(m_clinicStationName);
         dest.writeInt(this.m_isMale == true ? 1 : 0);
         dest.writeString(this.m_patientName);
+        dest.writeInt(this.m_isNewPatient == true ? 1 : 0);
+        dest.writeInt(this.m_isXray == true ? 1 : 0);
+        dest.writeInt(this.m_isCurrentXray == true ? 1 : 0);
     }
 
     public static final Parcelable.Creator<RowData> CREATOR
@@ -70,9 +76,15 @@ public class RowData implements Parcelable {
         m_clinicStationName = "";
         m_isMale = false;
         m_patientName = "";
+        m_isNewPatient = false;
+        m_isXray = false;
+        m_isCurrentXray = false;
     }
 
     private RowData(Parcel in) {
+        m_isCurrentXray = in.readInt() == 1;
+        m_isXray = in.readInt() == 1;
+        m_isNewPatient = in.readInt() == 1;
         m_patientName = in.readString();
         m_isMale = in.readInt() == 1;
         m_clinicStationName = in.readString();
@@ -166,5 +178,29 @@ public class RowData implements Parcelable {
 
     public void setIsMale(boolean isMale) {
         m_isMale = isMale;
+    }
+
+    public boolean isNewPatient() {
+        return m_isNewPatient;
+    }
+
+    public void setIsNewPatient(boolean isNewPatient) {
+        m_isNewPatient = isNewPatient;
+    }
+
+    public boolean isXray() {
+        return m_isXray;
+    }
+
+    public void setIsXray(boolean isXray) {
+        m_isXray = isXray;
+    }
+
+    public boolean isCurrentXray() {
+        return m_isCurrentXray;
+    }
+
+    public void setIsCurrentXray(boolean isCurrentXray) {
+        m_isCurrentXray = isCurrentXray;
     }
 }

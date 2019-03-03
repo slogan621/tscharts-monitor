@@ -302,6 +302,11 @@ public class StationActivity extends AppCompatActivity {
                     ArrayList<String> labels;
                     int colorWhite = ContextCompat.getColor(m_context, R.color.colorWhite);
                     int colorGrey = ContextCompat.getColor(m_context, R.color.colorGrey);
+                    int colorLightPurple = ContextCompat.getColor(m_context, R.color.colorLightPurple);
+                    int colorMediumPurple = ContextCompat.getColor(m_context, R.color.colorMediumPurple);
+                    int colorHotPink = ContextCompat.getColor(m_context, R.color.colorHotPink);
+                    int colorBrightBlue = ContextCompat.getColor(m_context, R.color.colorBrightBlue);
+                    int colorGold = ContextCompat.getColor(m_context, R.color.colorGold);
 
                     labels = m_sess.getLabels(page, count);
                     int labelCount = labels.size();
@@ -335,6 +340,7 @@ public class StationActivity extends AppCompatActivity {
                         }
 
                         TableRow tr = new TableRow(m_context);
+                        tr.setTop(6);
 
                         for (int j = 0; j < rowdata.size(); j++) {
                             
@@ -352,16 +358,27 @@ public class StationActivity extends AppCompatActivity {
                             RowData rd = rowdata.get(j);
                             String t = rd.getRowdata();
                             if (t.equals("") == false) {
-                                if (rd.isMale() == true) {
-                                    //iv.setImageResource(R.drawable.imageboywhitehalf);
+                                if (rd.isXray() && rd.isCurrentXray()) {
+                                    iv.setImageResource(R.drawable.xray);
+                                } else if (rd.isMale() == true) {
                                     iv.setImageResource(R.drawable.boyfront);
-                                    iv.setPadding(5,5, 5, 5);
+                                } else {
+                                    iv.setImageResource(R.drawable.girlfront);
+                                }
+                                iv.setPadding(5, 5, 5, 5);
+
+                                if (rd.isMale() == true) {
                                     iv.setBackgroundColor(m_context.getResources().getColor(R.color.colorLightBlue));
                                 } else {
-                                    //iv.setImageResource(R.drawable.imagegirlwhitehalf);
-                                    iv.setImageResource(R.drawable.girlfront);
-                                    iv.setPadding(5,5, 5, 5);
                                     iv.setBackgroundColor(m_context.getResources().getColor(R.color.colorPink));
+                                }
+
+                                if (rd.isNewPatient()) {
+                                    if (rd.isMale() == true) {
+                                        iv.setBackground(getDrawable(R.drawable.boy_blue_border));
+                                    } else {
+                                        iv.setBackground(getDrawable(R.drawable.girl_pink_border));
+                                    }
                                 }
                             }
 
