@@ -42,7 +42,7 @@ public class ActionDialogAdapter extends BaseAdapter {
             m_actionIds.add(R.drawable.delete);
             m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         } else {
-            m_actionIds.add(R.drawable.delete);
+            m_actionIds.add(R.drawable.delete_selector);
             m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         }
     }
