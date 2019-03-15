@@ -454,6 +454,7 @@ public class SessionSingleton {
             if (status == 200) {
                 o = m_patientData.get(id);
                 m_commonSessionSingleton.isNewPatient(id);  // go preload the new patient map
+                m_commonSessionSingleton.hasCurrentXRay(id, 365);
             }
         }
         if (o == null) {
@@ -679,6 +680,7 @@ public class SessionSingleton {
                     rd.setRoutingSlipEntry(entry.getInt("routingslipentry"));
                     rd.setRoutingSlip(entry.getInt("routingslip"));
                     rd.setIsNewPatient(m_commonSessionSingleton.isNewPatient(patient));
+                    rd.setIsCurrentXray(m_commonSessionSingleton.hasCurrentXRay(patient, 365));
                     String waitTime = entry.getString("waittime");
                     JSONObject p = getPatientData(patient);
                     String patientString = "";
