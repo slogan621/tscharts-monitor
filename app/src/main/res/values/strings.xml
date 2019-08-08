@@ -95,4 +95,8 @@
     <string name="msg_button_remove_from_xray_queue">"Remove from X-Ray queue"</string>
     <string name="msg_button_delete_from_clinic">Delete Patient From Clinic</string>
     <string name="title_delete_patient_from_clinic_dialog">Delete Patient From Clinic</string>
+    <string name="msg_unable_to_find_routing_slip_entries_for_patient">Unable to find routing slip entries for patient</string>
+    <string name="msg_failed_to_get_routing_slip_entries">Failed to get routing slip entries</string>
+    <string name="msg_failed_to_mark_routing_slip_removed">Failed to mark routing slip removed</string>
+    <string name="msg_failed_to_get_routing_slips_for_patient">Failed to get routing slips for patient</string>
 </resources>

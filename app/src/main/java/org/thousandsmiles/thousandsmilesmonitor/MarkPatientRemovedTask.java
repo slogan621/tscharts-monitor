@@ -38,9 +38,16 @@ public class MarkPatientRemovedTask extends AsyncTask<Object, Object, Object> {
             RowData rd = (RowData) params[0];
             m_routingSlip = rd.getRoutingSlip();
             m_activity = (Activity) params[1];
-            JSONArray ret = getRoutingSlipEntriesByStates(m_routingSlip, "New,Scheduled");
+            JSONArray ret = getRoutingSlipEntriesByStates(m_routingSlip, "New, Scheduled");
             if (ret != null) {
-              markRoutingSlipEntriesRemoved(ret);
+                markRoutingSlipEntriesRemoved(ret);
+            } else {
+                m_activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        ((StationActivity)m_activity).setRefresh();
+                        Toast.makeText(m_activity, m_activity.getString(R.string.msg_unable_to_find_routing_slip_entries_for_patient), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
         return "";
@@ -50,8 +57,15 @@ public class MarkPatientRemovedTask extends AsyncTask<Object, Object, Object> {
 
         JSONArray m_result;
 
-        public void onFail(int code, String msg)
+        public void onFail(int code, final String msg)
         {
+            m_activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    ((StationActivity)m_activity).setRefresh();
+                    String amsg = String.format("%s: %s", m_activity.getString(R.string.msg_failed_to_get_routing_slip_entries), msg);
+                    Toast.makeText(m_activity, amsg, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         public void onSuccess(int code, String msg)
@@ -96,6 +110,12 @@ public class MarkPatientRemovedTask extends AsyncTask<Object, Object, Object> {
                     int status = rsData.getStatus();
                     if (status != 200) {
                         ret = false;
+                        m_activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                ((StationActivity)m_activity).setRefresh();
+                                Toast.makeText(m_activity, m_activity.getString(R.string.msg_failed_to_mark_routing_slip_removed), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         break;
                     }
                 }
@@ -148,6 +168,13 @@ public class MarkPatientRemovedTask extends AsyncTask<Object, Object, Object> {
             int status = rsData.getStatus();
             if (status == 200) {
                 ret = listener.m_result;
+            } else {
+                m_activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        ((StationActivity)m_activity).setRefresh();
+                        Toast.makeText(m_activity, m_activity.getString(R.string.msg_failed_to_get_routing_slips_for_patient), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
         return ret;
