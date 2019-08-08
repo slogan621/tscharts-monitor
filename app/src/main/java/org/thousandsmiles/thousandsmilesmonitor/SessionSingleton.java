@@ -611,23 +611,12 @@ public class SessionSingleton {
                 }
             }
 
-            ret = String.format("%05d %s %s\n%.10s-%.10s, %.10s\n",
+            ret = String.format("%05d %s\n%.10s-%.10s, %.10s\n",
                     patient,
-                    p.getString("dob"),
-                    gender.charAt(0),
+                    gender,
                     p.getString("paternal_last"),
                     p.getString("maternal_last"),
                     p.getString("first"));
-            /*
-            ret = String.format("%d: %s-%s, %c\n%s %s: %s\n",
-                    patient,
-                    p.getString("paternal_last"),
-                    p.getString("maternal_last"),
-                    p.getString("first").charAt(0),
-                    gender,
-                    dob,
-                    p.getString("dob"));
-                    */
         } catch (JSONException e) {
             ret = "";
         }
