@@ -38,7 +38,7 @@ public class MarkPatientRemovedTask extends AsyncTask<Object, Object, Object> {
             RowData rd = (RowData) params[0];
             m_routingSlip = rd.getRoutingSlip();
             m_activity = (Activity) params[1];
-            JSONArray ret = getRoutingSlipEntriesByStates(m_routingSlip, "New, Scheduled");
+            JSONArray ret = getRoutingSlipEntriesByStates(m_routingSlip, "New,Scheduled");
             if (ret != null) {
                 markRoutingSlipEntriesRemoved(ret);
             } else {
