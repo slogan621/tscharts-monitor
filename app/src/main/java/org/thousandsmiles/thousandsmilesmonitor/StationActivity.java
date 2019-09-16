@@ -36,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -647,6 +648,8 @@ public class StationActivity extends AppCompatActivity {
         super.onResume();
         HideyHelper h = new HideyHelper();
         h.toggleHideyBar(this);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         final ClinicREST clinicREST = new ClinicREST(m_context);
 
