@@ -18,7 +18,9 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -611,12 +613,24 @@ public class SessionSingleton {
                 }
             }
 
-            ret = String.format("%05d %s\n%.10s-%.10s, %.10s\n",
-                    patient,
-                    gender,
-                    p.getString("paternal_last"),
-                    p.getString("maternal_last"),
-                    p.getString("first"));
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Boolean val = sharedPref.getBoolean("showDOB", true);
+            if (val == true) {
+                ret = String.format("%05d %s %s\n%.10s-%.10s, %.10s\n",
+                        patient,
+                        p.getString("dob"),
+                        gender,
+                        p.getString("paternal_last"),
+                        p.getString("maternal_last"),
+                        p.getString("first"));
+            } else {
+                ret = String.format("%05d %s\n%.10s-%.10s, %.10s\n",
+                        patient,
+                        gender,
+                        p.getString("paternal_last"),
+                        p.getString("maternal_last"),
+                        p.getString("first"));
+            }
         } catch (JSONException e) {
             ret = "";
         }

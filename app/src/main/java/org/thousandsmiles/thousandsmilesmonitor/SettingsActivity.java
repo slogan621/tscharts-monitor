@@ -1,6 +1,6 @@
 /*
- * (C) Copyright Syd Logan 2017
- * (C) Copyright Thousand Smiles Foundation 2017
+ * (C) Copyright Syd Logan 2017-2019
+ * (C) Copyright Thousand Smiles Foundation 2017-2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class SettingsActivity extends PreferenceActivity {
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private static void bindStringPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -102,6 +102,18 @@ public class SettingsActivity extends PreferenceActivity {
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+    }
+
+    private static void bindBooleanPreferenceSummaryToValue(Preference preference) {
+        // Set the listener to watch for value changes.
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+
+        // Trigger the listener immediately with the preference's
+        // current value.
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .getBoolean(preference.getKey(), true));
     }
 
     @Override
@@ -163,8 +175,9 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("ipAddress"));
-            bindPreferenceSummaryToValue(findPreference("port"));
+            bindStringPreferenceSummaryToValue(findPreference("ipAddress"));
+            bindStringPreferenceSummaryToValue(findPreference("port"));
+            bindBooleanPreferenceSummaryToValue(findPreference("showDOB"));
         }
 
         @Override

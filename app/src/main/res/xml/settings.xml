@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Server setting">
-        <EditTextPreference android:defaultValue="192.168.0.128" android:key="ipAddress" android:title="IP address" android:summary="Change IP separated by dots"></EditTextPreference>
-        <EditTextPreference android:defaultValue="443" android:summary="Change port number" android:key="port" android:title="Port"></EditTextPreference>
+        <EditTextPreference android:defaultValue="192.168.0.128" android:key="ipAddress" android:title="IP address" android:summary="IPV4 Server Address"></EditTextPreference>
+        <EditTextPreference android:defaultValue="443" android:summary="Server Port Number" android:key="port" android:title="Port"></EditTextPreference>
+        <SwitchPreference android:defaultValue="true" android:summary="Show Patient Date of Birth" android:key="showDOB" android:title="Show Patient Date Of Birth"></SwitchPreference>
     </PreferenceCategory>
 </PreferenceScreen>
