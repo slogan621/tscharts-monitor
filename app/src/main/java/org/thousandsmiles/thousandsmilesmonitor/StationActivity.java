@@ -18,8 +18,6 @@
 package org.thousandsmiles.thousandsmilesmonitor;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -70,6 +68,7 @@ public class StationActivity extends AppCompatActivity {
     boolean m_refresh = false;
     boolean m_paused = false;
     private GestureDetectorCompat m_detector;
+    private ActionDialogAdapter m_actionAdapter;
 
     public void setRefresh()
     {
@@ -90,7 +89,7 @@ public class StationActivity extends AppCompatActivity {
             //Log.d(DEBUG_TAG, "onFling: " + event1.toString() + event2.toString());
             /*
              * XXX in some cases, velocityX is neg and in some, pos, could be due to
-             *  tablet orientation. Needs to be investigated. But for now, any swipe that
+             * tablet orientation. Needs to be investigated. But for now, any swipe that
              * is along the x axis will trigger the swipe
              */
             if (abs((int)velocityX) > abs((int)velocityY)) {
@@ -304,11 +303,6 @@ public class StationActivity extends AppCompatActivity {
                     ArrayList<String> labels;
                     int colorWhite = ContextCompat.getColor(m_context, R.color.colorWhite);
                     int colorGrey = ContextCompat.getColor(m_context, R.color.colorGrey);
-                    int colorLightPurple = ContextCompat.getColor(m_context, R.color.colorLightPurple);
-                    int colorMediumPurple = ContextCompat.getColor(m_context, R.color.colorMediumPurple);
-                    int colorHotPink = ContextCompat.getColor(m_context, R.color.colorHotPink);
-                    int colorBrightBlue = ContextCompat.getColor(m_context, R.color.colorBrightBlue);
-                    int colorGold = ContextCompat.getColor(m_context, R.color.colorGold);
 
                     labels = m_sess.getLabels(page, count);
                     int labelCount = labels.size();
@@ -770,32 +764,38 @@ public class StationActivity extends AppCompatActivity {
                 });
         GridView grid = v.findViewById(R.id.myGrid);
         grid.setClickable(true);
-        ActionDialogAdapter a = new ActionDialogAdapter();
-        a.initialize(isXray, isActiveRow);
+        m_actionAdapter = new ActionDialogAdapter();
+        m_actionAdapter.initialize(isXray, isActiveRow);
 
         final AlertDialog testDialog = builder.create();
 
-        grid.setAdapter(a);
+        grid.setAdapter(m_actionAdapter);
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
                 testDialog.dismiss();
-                if (isActiveRow == false && isXray && arg2 == 0) {
+                if (m_actionAdapter.getPosition(ActionDialogAdapter.PatientOp.RemoveFromXRay) == position) {
                     DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(null, rd);
                     rtc.setArguments(args);
                     rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
-                } else if ((isActiveRow == false && isXray && arg2 == 1) || (isActiveRow == false && !isXray && arg2 == 0)) {
+                } else if (m_actionAdapter.getPosition(ActionDialogAdapter.PatientOp.DeletePatientFromClinic) == position) {
                     MarkPatientRemovedDialogFragment rtc = new MarkPatientRemovedDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(null, rd);
                     rtc.setArguments(args);
                     rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
-                } else {
+                } else if (m_actionAdapter.getPosition(ActionDialogAdapter.PatientOp.ViewPatientData) == position){
                     PatientSummaryDialogFragment rtc = new PatientSummaryDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(null, rd);
+                    rtc.setArguments(args);
+                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                } else if (m_actionAdapter.getPosition(ActionDialogAdapter.PatientOp.EditOldChartId) == position){
+                    SetPatientOldIDDialogFragment rtc = new SetPatientOldIDDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(null, rd);
                     rtc.setArguments(args);

@@ -29,8 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
-import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
-import org.thousandsmiles.tscharts_lib.RoutingSlipEntryREST;
 
 import java.text.DateFormat;
 import java.text.ParseException;

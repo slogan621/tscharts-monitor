@@ -90,12 +90,15 @@
     <string name="msg_action_dialog">Seleccione una acción para el paciente %s (ID =%d) haciendo clic en el ícono de abajo o haga clic en el botón Cancelar.</string>
     <string name="msg_button_delete_from_clinic">Eliminar paciente de la clínica</string>
     <string name="title_delete_patient_from_clinic_dialog">Eliminar paciente de la clínica</string>
+    <string name="title_set_patient_old_id_dialog">Editar la ID de la tabla anterior del paciente</string>
     <string name="msg_button_remove_from_xray_queue">"Retire al paciente de la línea de rayos X"</string>
     <string name="msg_button_view_patient_summary">Ver resumen del paciente</string>
+    <string name="msg_button_edit_old_id">Editar la ID de la tabla anterior del paciente</string>
     <string name="msg_unable_to_find_routing_slip_entries_for_patient">No se pueden encontrar entradas de enrutamiento para el paciente</string>
     <string name="msg_failed_to_get_routing_slip_entries">Error al obtener entradas de enrutamiento</string>
     <string name="msg_failed_to_mark_routing_slip_removed">Error al marcar el enrutamiento eliminado</string>
     <string name="msg_failed_to_get_routing_slips_for_patient">No se pudieron obtener notas de ruta para el paciente</string>
+    <string name="msg_button_save">"Salvar"</string>
 
     <!-- XXX pulled from tscharts-register, consider refactoring both the tscharts-lib -->
 

@@ -27,27 +27,55 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ActionDialogAdapter extends BaseAdapter {
 
-    ArrayList<Integer> m_actionIds = new ArrayList<Integer>();
-    ArrayList<Integer> m_actionTextIds = new ArrayList<Integer>();
+    public enum PatientOp
+    {
+        RemoveFromXRay, DeletePatientFromClinic, ViewPatientData, EditOldChartId
+    }
+
+    private ArrayList<Integer> m_actionIds = new ArrayList<Integer>();
+    private ArrayList<Integer> m_actionTextIds = new ArrayList<Integer>();
     private boolean m_isXray = false;
     private boolean m_isActiveRow = false;
+    private HashMap<PatientOp, Integer> m_opMap = new HashMap<PatientOp, Integer>();
 
     public void initialize(boolean isXray, boolean isActiveRow) {
         m_isXray = isXray;
+        int offset = 0;
         m_isActiveRow = isActiveRow;
         if (m_isXray == true && m_isActiveRow == false) {
+            m_opMap.put(PatientOp.RemoveFromXRay, offset);
+            offset++;
             m_actionIds.add(R.drawable.xray_selector);
             m_actionTextIds.add(R.string.msg_button_remove_from_xray_queue);
         }
         if (m_isActiveRow == false) {
+            m_opMap.put(PatientOp.DeletePatientFromClinic, offset);
+            offset++;
             m_actionIds.add(R.drawable.delete_selector);
             m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         }
         m_actionIds.add(R.drawable.view_summary_selector);
         m_actionTextIds.add(R.string.msg_button_view_patient_summary);
+        m_opMap.put(PatientOp.ViewPatientData, offset);
+        offset++;
+        m_actionIds.add(R.drawable.edit_oldid_selector);
+        m_actionTextIds.add(R.string.msg_button_edit_old_id);
+        m_opMap.put(PatientOp.EditOldChartId, offset);
+        offset++;
+    }
+
+    public int getPosition(PatientOp op) {
+        int ret = -1;    // not found
+        try {
+            ret = m_opMap.get(op);
+        } catch (Exception e) {
+            ret = -1;
+        }
+        return ret;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
