@@ -33,18 +33,21 @@ public class ActionDialogAdapter extends BaseAdapter {
     ArrayList<Integer> m_actionIds = new ArrayList<Integer>();
     ArrayList<Integer> m_actionTextIds = new ArrayList<Integer>();
     private boolean m_isXray = false;
+    private boolean m_isActiveRow = false;
 
-    public void initialize(boolean val) {
-        m_isXray = val;
-        if (m_isXray == true) {
+    public void initialize(boolean isXray, boolean isActiveRow) {
+        m_isXray = isXray;
+        m_isActiveRow = isActiveRow;
+        if (m_isXray == true && m_isActiveRow == false) {
             m_actionIds.add(R.drawable.xray_selector);
             m_actionTextIds.add(R.string.msg_button_remove_from_xray_queue);
-            m_actionIds.add(R.drawable.delete);
-            m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
-        } else {
+        }
+        if (m_isActiveRow == false) {
             m_actionIds.add(R.drawable.delete_selector);
             m_actionTextIds.add(R.string.msg_button_delete_from_clinic);
         }
+        m_actionIds.add(R.drawable.view_summary_selector);
+        m_actionTextIds.add(R.string.msg_button_view_patient_summary);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

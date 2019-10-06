@@ -73,6 +73,8 @@
     <string name="finished">Finished</string>
     <string name="finished_es">Terminado</string>
 
+    <string name="dismiss">Dismiss</string>
+
     <string name="state">State</string>
     <string name="state_es">Estado</string>
 
@@ -94,9 +96,39 @@
     <string name="msg_action_dialog">Select an action for patient %s (ID=%d) by clicking an icon below, or click the Cancel button.</string>
     <string name="msg_button_remove_from_xray_queue">"Remove from X-Ray queue"</string>
     <string name="msg_button_delete_from_clinic">Delete Patient From Clinic</string>
+    <string name="msg_button_view_patient_summary">View Patient Summary</string>
     <string name="title_delete_patient_from_clinic_dialog">Delete Patient From Clinic</string>
     <string name="msg_unable_to_find_routing_slip_entries_for_patient">Unable to find routing slip entries for patient</string>
     <string name="msg_failed_to_get_routing_slip_entries">Failed to get routing slip entries</string>
     <string name="msg_failed_to_mark_routing_slip_removed">Failed to mark routing slip removed</string>
     <string name="msg_failed_to_get_routing_slips_for_patient">Failed to get routing slips for patient</string>
+
+    <!-- XXX pulled from tscharts-register, consider refactoring both the tscharts-lib -->
+
+    <string name="patient_id">ID</string>
+    <string name="patient_oldid">Old ID</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="paternal_last">Paternal (Father\'s) Last Name</string>
+    <string name="patient_address">Patient Address</string>
+    <string name="maternal_last">Maternal (Mother\'s) Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="address_street_1">Street 1</string>
+    <string name="address_street_2">Street 2</string>
+    <string name="address_colonia">Colony</string>
+    <string name="address_city">City</string>
+    <string name="address_state">State</string>
+    <string name="patient_gender_dob">Gender and Date of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="patient_contact_info">Patient Contact Information</string>
+    <string name="phone_1">Phone 1</string>
+    <string name="phone_2">Phone 2</string>
+    <string name="e_mail">E-Mail Address</string>
+
+    <!-- end strings that might be refactored to tscharts-lib -->
+
+    <!-- patient summary dialog -->
+
+    <string name="title_patient_summary">Patient Summary</string>
+
 </resources>

@@ -43,7 +43,6 @@
     <string name="msg_delete">Retirar</string>
     <string name="msg_remove_from_queue">"¿Retire al paciente %s (ID=%d) de la línea %s?"</string>
     <string name="msg_delete_patient_from_clinic">"¿Retire al paciente %s (ID=%d) de la clínica?"</string>
-    <string name="msg_button_remove_from_queue">"Retire de la línea"</string>
 
     <string name="cancel">Cancelar</string>
 
@@ -77,6 +76,8 @@
     <string name="avgservicetime">Avg Service Time</string>
     <string name="avgservicetime_es">Tiempo Promedio de Servicio</string>
 
+    <string name="dismiss">Descartar</string>
+
     <string name="clinicstationstatus">Clinic Status</string>
     <string name="clinicstationstatus_es">Estado de la clínica</string>
     <string name="msg_patient_successfully_removed">Paciente eliminado con éxito de la línea</string>
@@ -90,9 +91,35 @@
     <string name="msg_button_delete_from_clinic">Eliminar paciente de la clínica</string>
     <string name="title_delete_patient_from_clinic_dialog">Eliminar paciente de la clínica</string>
     <string name="msg_button_remove_from_xray_queue">"Retire al paciente de la línea de rayos X"</string>
+    <string name="msg_button_view_patient_summary">Ver resumen del paciente</string>
     <string name="msg_unable_to_find_routing_slip_entries_for_patient">No se pueden encontrar entradas de enrutamiento para el paciente</string>
     <string name="msg_failed_to_get_routing_slip_entries">Error al obtener entradas de enrutamiento</string>
     <string name="msg_failed_to_mark_routing_slip_removed">Error al marcar el enrutamiento eliminado</string>
     <string name="msg_failed_to_get_routing_slips_for_patient">No se pudieron obtener notas de ruta para el paciente</string>
+
+    <!-- XXX pulled from tscharts-register, consider refactoring both the tscharts-lib -->
+
+    <string name="patient_id">Identificación</string>
+    <string name="patient_oldid">Identificación Viejo</string>
+    <string name="patient_name">Nombre del paciente</string>
+    <string name="paternal_last">Apellido paterno (del padre)</string>
+    <string name="patient_address">Dirección del paciente</string>
+    <string name="maternal_last">Apellido materno (de la madre)</string>
+    <string name="first_name">Nombre de pila</string>
+    <string name="middle_name">Segundo nombre</string>
+    <string name="address_street_1">Calle 1</string>
+    <string name="address_street_2">Calle 2</string>
+    <string name="address_colonia">Colonia</string>
+    <string name="address_city">Ciudad</string>
+    <string name="address_state">Estado</string>
+    <string name="patient_gender_dob">Género y fecha de nacimiento</string>
+    <string name="gender">Género</string>
+    <string name="patient_contact_info">Información de contacto del paciente </string>
+    <string name="phone_1">Teléfono 1</string>
+    <string name="phone_2">Teléfono 2</string>
+    <string name="e_mail">Dirección de correo electrónico</string>
+
+    <!-- end strings that might be refactored to tscharts-lib -->
+
 
 </resources>

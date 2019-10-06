@@ -17,8 +17,9 @@
 
 package org.thousandsmiles.thousandsmilesmonitor;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -358,7 +359,12 @@ public class StationActivity extends AppCompatActivity {
 
                             RowData rd = rowdata.get(j);
                             String t = rd.getRowdata();
-                            if (t.equals("") == false) {
+                            final boolean hasRowData;
+                            final boolean isActiveRow;
+
+                            hasRowData = t.equals("");
+                            isActiveRow = i == -1;
+                            if (hasRowData == false) {
                                 if (rd.isXray() && rd.isCurrentXray()) {
                                     iv.setImageResource(R.drawable.xray);
                                 } else if (rd.isMale() == true) {
@@ -385,12 +391,12 @@ public class StationActivity extends AppCompatActivity {
 
                             TextView b = new TextView(m_context);
                             b.setTag(rd);
-                            if (i >= 0 && t.equals("") == false) {
+                            if (i >= -1) {
                                 b.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
                                         RowData rdTag = (RowData) v.getTag();
                                         int clinicStation = rdTag.getClinicstation();
-                                        showActionDialog(rdTag, m_sess.isXRay(clinicStation));
+                                        showActionDialog(rdTag, m_sess.isXRay(clinicStation), isActiveRow);
                                     }
                                 });
                             }
@@ -405,8 +411,8 @@ public class StationActivity extends AppCompatActivity {
                             b.setGravity(Gravity.CENTER_HORIZONTAL);
                             b.setTextColor(ContextCompat.getColor(m_context, R.color.colorBlack));
 
-                            if (t.equals("") == false) {
-                                if (i == -1) {
+                            if (hasRowData == false) {
+                                if (isActiveRow == true) {
                                     b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorGreen));
                                 } else if (rowdata.get(j).isWaitingItem()) {
                                     b.setBackgroundColor(ContextCompat.getColor(m_context, R.color.colorYellow));
@@ -740,7 +746,7 @@ public class StationActivity extends AppCompatActivity {
         System.exit(1);
     }
 
-    AlertDialog showActionDialog(final RowData rd, final boolean isXray)
+    AlertDialog showActionDialog(final RowData rd, final boolean isXray, final boolean isActiveRow)
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(StationActivity.this);
         // Get the layout inflater
@@ -765,7 +771,7 @@ public class StationActivity extends AppCompatActivity {
         GridView grid = v.findViewById(R.id.myGrid);
         grid.setClickable(true);
         ActionDialogAdapter a = new ActionDialogAdapter();
-        a.initialize(isXray);
+        a.initialize(isXray, isActiveRow);
 
         final AlertDialog testDialog = builder.create();
 
@@ -775,25 +781,30 @@ public class StationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                if (isXray && arg2 == 0) {
+                testDialog.dismiss();
+                if (isActiveRow == false && isXray && arg2 == 0) {
                     DeleteFromQueueDialogFragment rtc = new DeleteFromQueueDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(null, rd);
                     rtc.setArguments(args);
                     rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
-                } else if ((isXray && arg2 == 1) || (!isXray && arg2 == 0)) {
+                } else if ((isActiveRow == false && isXray && arg2 == 1) || (isActiveRow == false && !isXray && arg2 == 0)) {
                     MarkPatientRemovedDialogFragment rtc = new MarkPatientRemovedDialogFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(null, rd);
                     rtc.setArguments(args);
                     rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
+                } else {
+                    PatientSummaryDialogFragment rtc = new PatientSummaryDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(null, rd);
+                    rtc.setArguments(args);
+                    rtc.show(getSupportFragmentManager(), getApplicationContext().getString(R.string.msg_delete));
                 }
-                testDialog.dismiss();
                 HideyHelper h = new HideyHelper();
                 h.toggleHideyBar(StationActivity.this);
             }
         });
-
 
         testDialog.show();
         return testDialog;
