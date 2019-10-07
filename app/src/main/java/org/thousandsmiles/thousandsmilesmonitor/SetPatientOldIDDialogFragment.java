@@ -27,6 +27,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.thousandsmiles.tscharts_lib.HideyHelper;
 import org.thousandsmiles.tscharts_lib.PatientData;
@@ -37,6 +38,29 @@ public class SetPatientOldIDDialogFragment extends DialogFragment {
     RowData m_rd;
     Activity m_activity;
     PatientData m_patientData = new PatientData();
+
+    public void updatePatientData()
+    {
+        TextView text;
+
+        text = m_view.findViewById(R.id.value_id);
+        text.setText(String.format("%d", m_patientData.getId()));
+        text = m_view.findViewById(R.id.value_curp);
+        text.setText(String.format("%s", m_patientData.getCURP()));
+        text = m_view.findViewById(R.id.value_dob);
+        text.setText(String.format("%s", m_patientData.getDob()));
+        text = m_view.findViewById(R.id.value_first);
+        text.setText(String.format("%s", m_patientData.getFirst()));
+        text = m_view.findViewById(R.id.value_middle);
+        text.setText(String.format("%s", m_patientData.getMiddle()));
+        text = m_view.findViewById(R.id.value_fatherlast);
+        text.setText(String.format("%s", m_patientData.getFatherLast()));
+        text = m_view.findViewById(R.id.value_motherlast);
+        text.setText(String.format("%s", m_patientData.getMotherLast()));
+        text = m_view.findViewById(R.id.value_gender);
+        text.setText(String.format("%s", m_patientData.getGender()));
+    }
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -51,17 +75,23 @@ public class SetPatientOldIDDialogFragment extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         m_view = inflater.inflate(R.layout.edit_patient_oldid_dialog, null);
-        EditText text = (EditText) m_view.findViewById(R.id.value_oldid);
-        ;
-        text.setText(String.format("%d", m_patientData.getOldId()));
+        EditText oldText = (EditText) m_view.findViewById(R.id.value_oldid);
+        oldText.setText(String.format("%d", m_patientData.getOldId()));
+        TextView text = (TextView) m_view.findViewById(R.id.value_id);
+        text.setText(String.format("%d", m_patientData.getId()));
+        updatePatientData();
 
         builder.setView(m_view)
                 // Add action buttons
                 .setPositiveButton(R.string.msg_button_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        AsyncTask task = new MarkPatientRemovedTask();
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object) m_rd, (Object) m_activity);
+                        EditText text = (EditText)m_view.findViewById(R.id.value_oldid);
+                        String val = text.getText().toString();
+                        m_patientData.setOldId(Integer.parseInt(val));
+
+                        AsyncTask task = new SetPatientOldIDTask();
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object) m_patientData, (Object) m_activity);
                         dialog.dismiss();
                         HideyHelper h = new HideyHelper();
                         h.toggleHideyBar(m_activity);

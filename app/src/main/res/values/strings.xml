@@ -105,6 +105,9 @@
     <string name="msg_failed_to_get_routing_slip_entries">Failed to get routing slip entries</string>
     <string name="msg_failed_to_mark_routing_slip_removed">Failed to mark routing slip removed</string>
     <string name="msg_failed_to_get_routing_slips_for_patient">Failed to get routing slips for patient</string>
+    <string name="msg_failed_to_update_patient_old_id">Failed to update previous ID for patient</string>
+    <string name="msg_patient_successful_update_old_id">Successfully update patient\'s old chart ID</string>
+    <string name="msg_patient_unsuccessful_update_old_id">Update of patient\'s old chart ID was successful</string>
 
     <!-- XXX pulled from tscharts-register, consider refactoring both the tscharts-lib -->
 

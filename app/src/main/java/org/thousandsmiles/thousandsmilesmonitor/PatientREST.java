@@ -21,6 +21,7 @@ package org.thousandsmiles.thousandsmilesmonitor;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -68,6 +69,19 @@ public class PatientREST extends RESTful {
                 } else {
                    setStatus(error.networkResponse.statusCode);
                 }
+                m_lock.notify();
+            }
+        }
+    }
+
+    private class PutResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+
+            synchronized (m_lock) {
+                setStatus(200);
+                onSuccess(200, "");
                 m_lock.notify();
             }
         }
@@ -127,7 +141,33 @@ public class PatientREST extends RESTful {
 
         AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.GET, url, null, new ResponseListener(), new ErrorListener());
 
-        queue.add((JsonObjectRequest) request);
+        queue.add(request);
+
+        return m_lock;
+    }
+
+    public Object updatePatientOldId(int patientId, int oldId) {
+
+        VolleySingleton volley = VolleySingleton.getInstance();
+
+        volley.initQueueIf(getContext());
+
+        RequestQueue queue = volley.getQueue();
+
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("oldid", oldId);
+        } catch (Exception e) {
+            return null;
+        }
+
+        String url = String.format("%s://%s:%s/tscharts/v1/patient/%d/", getProtocol(), getIP(), getPort(), patientId);
+
+        AuthJSONObjectRequest request = new AuthJSONObjectRequest(Request.Method.PUT, url, data, new PutResponseListener(), new ErrorListener());
+        request.setRetryPolicy(new DefaultRetryPolicy(getTimeoutInMillis(), getRetries(), DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        queue.add(request);
 
         return m_lock;
     }
