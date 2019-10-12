@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.thousandsmiles.tscharts_lib.HideyHelper;
 import org.thousandsmiles.tscharts_lib.PatientData;
@@ -88,7 +89,12 @@ public class SetPatientOldIDDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText text = (EditText)m_view.findViewById(R.id.value_oldid);
                         String val = text.getText().toString();
-                        m_patientData.setOldId(Integer.parseInt(val));
+                        try {
+                            m_patientData.setOldId(Integer.parseInt(val));
+                        } catch (Exception e) {
+                            Toast.makeText(m_activity.getApplicationContext(), R.string.msg_id_must_be_a_number, Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
                         AsyncTask task = new SetPatientOldIDTask();
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object) m_patientData, (Object) m_activity);

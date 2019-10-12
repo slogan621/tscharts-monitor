@@ -102,6 +102,7 @@
     <string name="msg_patient_successful_update_old_id">Actualice con éxito la antigua identificación del historial del paciente</string>
     <string name="msg_patient_unsuccessful_update_old_id">La actualización de la identificación de la tabla anterior del paciente no tuvo éxito</string>
     <string name="msg_button_save">"Salvar"</string>
+    <string name="msg_id_must_be_a_number">¡La identificación debe ser un número!</string>
 
     <!-- XXX pulled from tscharts-register, consider refactoring both the tscharts-lib -->
 

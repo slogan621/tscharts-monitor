@@ -39,6 +39,35 @@
 
         <TableRow
 
+            android:id="@+id/patient_oldid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+
+                android:id="@+id/title_oldid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#b0b0b0"
+                android:padding="18dip"
+                android:text="@string/patient_oldid"
+                android:textColor="#000"
+                android:textSize="12dp" />
+
+            <EditText
+                android:id="@+id/value_oldid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="18dip"
+                android:text="Text 2"
+                android:textColor="#000"
+                android:inputType="number"
+                android:textSize="14dp" />
+
+        </TableRow>
+
+        <TableRow
+
             android:id="@+id/patient_curp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
@@ -234,33 +263,7 @@
                 android:textColor="#000"
                 android:textSize="14dp" />
         </TableRow>
-        <TableRow
 
-            android:id="@+id/patient_oldid"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-
-                android:id="@+id/title_oldid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#b0b0b0"
-                android:padding="18dip"
-                android:text="@string/patient_oldid"
-                android:textColor="#000"
-                android:textSize="12dp" />
-
-            <EditText
-                android:id="@+id/value_oldid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="18dip"
-                android:text="Text 2"
-                android:textColor="#000"
-                android:textSize="14dp" />
-
-        </TableRow>
 
     </TableLayout>
 </RelativeLayout>
