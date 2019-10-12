@@ -385,7 +385,7 @@ public class StationActivity extends AppCompatActivity {
 
                             TextView b = new TextView(m_context);
                             b.setTag(rd);
-                            if (i >= -1) {
+                            if (i >= -1 && hasRowData == false) {
                                 b.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
                                         RowData rdTag = (RowData) v.getTag();
