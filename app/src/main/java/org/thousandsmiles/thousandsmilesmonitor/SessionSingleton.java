@@ -542,7 +542,7 @@ public class SessionSingleton {
                         Date d;
 
                         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        df.setTimeZone(TimeZone.getDefault());
 
                         int csid = o.getInt("clinicstation");
                         JSONObject clinicStation = getClinicStationData(csid);
