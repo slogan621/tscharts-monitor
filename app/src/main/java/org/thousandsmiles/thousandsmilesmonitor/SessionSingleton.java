@@ -29,6 +29,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.thousandsmiles.tscharts_lib.CommonSessionSingleton;
+import org.thousandsmiles.tscharts_lib.PatientREST;
+import org.thousandsmiles.tscharts_lib.RESTCompletionListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -427,6 +429,31 @@ public class SessionSingleton {
         return o;
     }
 
+    class GetPatientDataListener implements RESTCompletionListener {
+
+        @Override
+        public void onSuccess(int code, String message, JSONArray a) {
+        }
+
+        @Override
+        public void onSuccess(int code, String message, JSONObject a) {
+            try {
+                SessionSingleton.getInstance().addPatientData(a);
+            } catch (Exception e) {
+            }
+
+        }
+
+        @Override
+        public void onSuccess(int code, String message) {
+        }
+
+        @Override
+        public void onFail(int code, String message) {
+
+        }
+    }
+
     public JSONObject getPatientData(final int id) {
 
         JSONObject o = null;
@@ -436,6 +463,7 @@ public class SessionSingleton {
         }
         if (o == null && Looper.myLooper() != Looper.getMainLooper()) {
             final PatientREST patientData = new PatientREST(getContext());
+            patientData.addListener(new GetPatientDataListener());
             Object lock = patientData.getPatientData(id);
 
             synchronized (lock) {

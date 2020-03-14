@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.widget.Toast;
 import org.thousandsmiles.tscharts_lib.PatientData;
+import org.thousandsmiles.tscharts_lib.PatientREST;
 
 public class SetPatientOldIDTask extends AsyncTask<Object, Object, Object> {
     private Activity m_activity;
