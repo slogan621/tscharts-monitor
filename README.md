@@ -1,10 +1,12 @@
 # tscharts-monitor
 
-Android UI for realtime monitoring of patient queues during a Thousand Smiles
+(Deprecated) Android UI for realtime monitoring of patient queues during a Thousand Smiles
 clinic.
 
 The intent is for this application to be accessed via tablet or chromecast to
 TV monitors that are positioned in our clinic.
+
+This application has been deprecated. Parts of it will be cherry-picked into its replacement, https://github.com/slogan621/tscharts-chart
 
 # Overview
 
