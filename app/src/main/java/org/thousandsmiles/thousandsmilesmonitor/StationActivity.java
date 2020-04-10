@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -360,7 +359,7 @@ public class StationActivity extends AppCompatActivity {
                             isActiveRow = i == -1;
                             if (hasRowData == false) {
                                 if (rd.isXray() && rd.isCurrentXray()) {
-                                    iv.setImageResource(R.drawable.xray);
+                                    iv.setImageResource(R.drawable.xray_remove);
                                 } else if (rd.isMale() == true) {
                                     iv.setImageResource(R.drawable.boyfront);
                                 } else {

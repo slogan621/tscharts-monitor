@@ -49,7 +49,7 @@ public class ActionDialogAdapter extends BaseAdapter {
         if (m_isXray == true && m_isActiveRow == false) {
             m_opMap.put(PatientOp.RemoveFromXRay, offset);
             offset++;
-            m_actionIds.add(R.drawable.xray_selector);
+            m_actionIds.add(R.drawable.xray_remove_selector);
             m_actionTextIds.add(R.string.msg_button_remove_from_xray_queue);
         }
         if (m_isActiveRow == false) {
